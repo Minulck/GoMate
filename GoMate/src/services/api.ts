@@ -1,5 +1,5 @@
 // Transport & Destinations API Service
-const API_BASE_URL = 'https://dummyjson.com';
+const API_BASE_URL = "https://dummyjson.com";
 
 export interface Destination {
   id: number;
@@ -38,15 +38,15 @@ class ApiService {
   // Authentication endpoints
   async login({ username, password }: LoginCredentials): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
     });
 
     if (!response.ok) {
-      throw new Error('Invalid credentials');
+      throw new Error("Invalid credentials");
     }
 
     return response.json();
@@ -54,25 +54,30 @@ class ApiService {
 
   async getUser(token: string): Promise<User> {
     const response = await fetch(`${API_BASE_URL}/auth/me`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to get user');
+      throw new Error("Failed to get user");
     }
 
     return response.json();
   }
 
   // Destinations/Products endpoints (using products as travel destinations)
-  async getDestinations(limit: number = 20, skip: number = 0): Promise<ApiResponse<Destination[]>> {
-    const response = await fetch(`${API_BASE_URL}/products?limit=${limit}&skip=${skip}`);
-    
+  async getDestinations(
+    limit: number = 20,
+    skip: number = 0
+  ): Promise<ApiResponse<Destination[]>> {
+    const response = await fetch(
+      `${API_BASE_URL}/products?limit=${limit}&skip=${skip}`
+    );
+
     if (!response.ok) {
-      throw new Error('Failed to fetch destinations');
+      throw new Error("Failed to fetch destinations");
     }
 
     const data = await response.json();
@@ -96,9 +101,9 @@ class ApiService {
 
   async getDestination(id: number): Promise<Destination> {
     const response = await fetch(`${API_BASE_URL}/products/${id}`);
-    
+
     if (!response.ok) {
-      throw new Error('Failed to fetch destination');
+      throw new Error("Failed to fetch destination");
     }
 
     const product = await response.json();
@@ -116,10 +121,12 @@ class ApiService {
   }
 
   async searchDestinations(query: string): Promise<ApiResponse<Destination[]>> {
-    const response = await fetch(`${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
-    
+    const response = await fetch(
+      `${API_BASE_URL}/products/search?q=${encodeURIComponent(query)}`
+    );
+
     if (!response.ok) {
-      throw new Error('Failed to search destinations');
+      throw new Error("Failed to search destinations");
     }
 
     const data = await response.json();
@@ -141,11 +148,15 @@ class ApiService {
     };
   }
 
-  async getDestinationsByCategory(category: string): Promise<ApiResponse<Destination[]>> {
-    const response = await fetch(`${API_BASE_URL}/products/category/${encodeURIComponent(category)}`);
-    
+  async getDestinationsByCategory(
+    category: string
+  ): Promise<ApiResponse<Destination[]>> {
+    const response = await fetch(
+      `${API_BASE_URL}/products/category/${encodeURIComponent(category)}`
+    );
+
     if (!response.ok) {
-      throw new Error('Failed to fetch destinations by category');
+      throw new Error("Failed to fetch destinations by category");
     }
 
     const data = await response.json();
@@ -169,9 +180,9 @@ class ApiService {
 
   async getCategories(): Promise<string[]> {
     const response = await fetch(`${API_BASE_URL}/products/categories`);
-    
+
     if (!response.ok) {
-      throw new Error('Failed to fetch categories');
+      throw new Error("Failed to fetch categories");
     }
 
     return response.json();
