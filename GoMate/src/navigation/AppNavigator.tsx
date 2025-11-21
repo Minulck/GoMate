@@ -20,7 +20,7 @@ const Tab = createBottomTabNavigator();
 // Main Tab Navigator (for authenticated users)
 const MainTabs = () => {
   const { colors } = useTheme();
-  
+
   return (
     <Tab.Navigator
       screenOptions={{

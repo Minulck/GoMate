@@ -102,12 +102,12 @@ const HomeScreen = () => {
       "Are you sure you want to logout?",
       [
         { text: "Cancel", style: "cancel" },
-        { 
-          text: "Logout", 
+        {
+          text: "Logout",
           onPress: () => {
             dispatch(logout());
           },
-          style: "destructive"
+          style: "destructive",
         },
       ],
       { cancelable: true }
@@ -207,8 +207,8 @@ const HomeScreen = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity 
-            style={styles.logoutButton} 
+          <TouchableOpacity
+            style={styles.logoutButton}
             onPress={handleLogout}
             activeOpacity={0.7}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
@@ -278,204 +278,205 @@ const HomeScreen = () => {
   );
 };
 
-const createStyles = (colors: any) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  centerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.background,
-  },
-  loadingText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-  },
-  header: {
-    backgroundColor: colors.primary,
-    paddingTop: 50,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  headerContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  userSection: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  avatarContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.border,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  welcomeSection: {
-    flex: 1,
-  },
-  welcomeText: {
-    fontSize: 14,
-    color: colors.surface,
-    opacity: 0.9,
-    fontWeight: "500",
-  },
-  userName: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: colors.surface,
-    marginTop: 2,
-  },
-  logoutButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.border,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  searchContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: colors.surface,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  searchBar: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.background,
-    borderRadius: 25,
-    paddingHorizontal: 16,
-    marginRight: 12,
-  },
-  searchInput: {
-    flex: 1,
-    marginLeft: 12,
-    fontSize: 16,
-    color: colors.text,
-  },
-  searchButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
-    justifyContent: "center",
-  },
-  searchButtonText: {
-    color: colors.surface,
-    fontWeight: "600",
-  },
-  errorContainer: {
-    backgroundColor: colors.error,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  errorText: {
-    color: colors.surface,
-    textAlign: "center",
-  },
-  listContainer: {
-    padding: 20,
-  },
-  destinationCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 20,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 5,
-    overflow: "hidden",
-  },
-  destinationImage: {
-    width: "100%",
-    height: 220,
-    backgroundColor: colors.border,
-  },
-  destinationInfo: {
-    padding: 16,
-  },
-  destinationHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 8,
-  },
-  destinationTitle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: "bold",
-    color: colors.text,
-    marginRight: 12,
-  },
-  favouriteButton: {
-    padding: 4,
-  },
-  destinationDescription: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    lineHeight: 20,
-    marginBottom: 12,
-  },
-  destinationFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  locationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  locationText: {
-    marginLeft: 4,
-    fontSize: 12,
-    color: colors.textSecondary,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  ratingText: {
-    marginLeft: 4,
-    fontSize: 12,
-    color: colors.textSecondary,
-    fontWeight: "600",
-  },
-  emptyContainer: {
-    alignItems: "center",
-    paddingVertical: 40,
-  },
-  emptyText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.textSecondary,
-    marginBottom: 8,
-  },
-  emptySubtext: {
-    fontSize: 14,
-    color: colors.textSecondary,
-  },
-});
+const createStyles = (colors: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    centerContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.background,
+    },
+    loadingText: {
+      fontSize: 16,
+      color: colors.textSecondary,
+    },
+    header: {
+      backgroundColor: colors.primary,
+      paddingTop: 50,
+      paddingBottom: 20,
+      paddingHorizontal: 20,
+      borderBottomLeftRadius: 24,
+      borderBottomRightRadius: 24,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      elevation: 8,
+    },
+    headerContent: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    userSection: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
+    avatarContainer: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: colors.border,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 12,
+    },
+    welcomeSection: {
+      flex: 1,
+    },
+    welcomeText: {
+      fontSize: 14,
+      color: colors.surface,
+      opacity: 0.9,
+      fontWeight: "500",
+    },
+    userName: {
+      fontSize: 20,
+      fontWeight: "700",
+      color: colors.surface,
+      marginTop: 2,
+    },
+    logoutButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: colors.border,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    searchContainer: {
+      flexDirection: "row",
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      backgroundColor: colors.surface,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    searchBar: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: colors.background,
+      borderRadius: 25,
+      paddingHorizontal: 16,
+      marginRight: 12,
+    },
+    searchInput: {
+      flex: 1,
+      marginLeft: 12,
+      fontSize: 16,
+      color: colors.text,
+    },
+    searchButton: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      borderRadius: 25,
+      justifyContent: "center",
+    },
+    searchButtonText: {
+      color: colors.surface,
+      fontWeight: "600",
+    },
+    errorContainer: {
+      backgroundColor: colors.error,
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+    },
+    errorText: {
+      color: colors.surface,
+      textAlign: "center",
+    },
+    listContainer: {
+      padding: 20,
+    },
+    destinationCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 20,
+      marginBottom: 20,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.12,
+      shadowRadius: 8,
+      elevation: 5,
+      overflow: "hidden",
+    },
+    destinationImage: {
+      width: "100%",
+      height: 220,
+      backgroundColor: colors.border,
+    },
+    destinationInfo: {
+      padding: 16,
+    },
+    destinationHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 8,
+    },
+    destinationTitle: {
+      flex: 1,
+      fontSize: 18,
+      fontWeight: "bold",
+      color: colors.text,
+      marginRight: 12,
+    },
+    favouriteButton: {
+      padding: 4,
+    },
+    destinationDescription: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      lineHeight: 20,
+      marginBottom: 12,
+    },
+    destinationFooter: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    locationContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    locationText: {
+      marginLeft: 4,
+      fontSize: 12,
+      color: colors.textSecondary,
+    },
+    ratingContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    ratingText: {
+      marginLeft: 4,
+      fontSize: 12,
+      color: colors.textSecondary,
+      fontWeight: "600",
+    },
+    emptyContainer: {
+      alignItems: "center",
+      paddingVertical: 40,
+    },
+    emptyText: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.textSecondary,
+      marginBottom: 8,
+    },
+    emptySubtext: {
+      fontSize: 14,
+      color: colors.textSecondary,
+    },
+  });
 
 export default HomeScreen;

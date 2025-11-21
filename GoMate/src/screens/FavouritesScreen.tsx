@@ -149,150 +149,151 @@ const FavouritesScreen = () => {
   );
 };
 
-const createStyles = (colors) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 50,
-    paddingBottom: 20,
-    backgroundColor: colors.primary,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: colors.surface,
-  },
-  clearButton: {
-    backgroundColor: colors.border,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  clearButtonText: {
-    color: colors.surface,
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  countContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  countText: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    fontWeight: "500",
-  },
-  listContainer: {
-    padding: 20,
-  },
-  favouriteCard: {
-    flexDirection: "row",
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  favouriteImage: {
-    width: 100,
-    height: 100,
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
-  },
-  favouriteInfo: {
-    flex: 1,
-    padding: 12,
-    justifyContent: "space-between",
-  },
-  favouriteHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 4,
-  },
-  favouriteTitle: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: "bold",
-    color: colors.text,
-    marginRight: 8,
-  },
-  removeButton: {
-    padding: 4,
-  },
-  favouriteDescription: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    lineHeight: 18,
-    marginBottom: 8,
-  },
-  favouriteFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  locationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  locationText: {
-    marginLeft: 4,
-    fontSize: 11,
-    color: colors.textSecondary,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  ratingText: {
-    marginLeft: 4,
-    fontSize: 11,
-    color: colors.textSecondary,
-    fontWeight: "600",
-  },
-  emptyContainer: {
-    alignItems: "center",
-    paddingVertical: 60,
-    paddingHorizontal: 40,
-  },
-  emptyTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.text,
-    marginBottom: 12,
-    textAlign: "center",
-  },
-  emptySubtitle: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    textAlign: "center",
-    lineHeight: 22,
-    marginBottom: 30,
-  },
-  exploreButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 25,
-  },
-  exploreButtonText: {
-    color: colors.surface,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-});
+const createStyles = (colors) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingTop: 50,
+      paddingBottom: 20,
+      backgroundColor: colors.primary,
+    },
+    headerTitle: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: colors.surface,
+    },
+    clearButton: {
+      backgroundColor: colors.border,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 20,
+    },
+    clearButtonText: {
+      color: colors.surface,
+      fontWeight: "600",
+      fontSize: 14,
+    },
+    countContainer: {
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      backgroundColor: colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    countText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      fontWeight: "500",
+    },
+    listContainer: {
+      padding: 20,
+    },
+    favouriteCard: {
+      flexDirection: "row",
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      marginBottom: 12,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      elevation: 2,
+    },
+    favouriteImage: {
+      width: 100,
+      height: 100,
+      borderTopLeftRadius: 12,
+      borderBottomLeftRadius: 12,
+    },
+    favouriteInfo: {
+      flex: 1,
+      padding: 12,
+      justifyContent: "space-between",
+    },
+    favouriteHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 4,
+    },
+    favouriteTitle: {
+      flex: 1,
+      fontSize: 16,
+      fontWeight: "bold",
+      color: colors.text,
+      marginRight: 8,
+    },
+    removeButton: {
+      padding: 4,
+    },
+    favouriteDescription: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      lineHeight: 18,
+      marginBottom: 8,
+    },
+    favouriteFooter: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    locationContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
+    locationText: {
+      marginLeft: 4,
+      fontSize: 11,
+      color: colors.textSecondary,
+    },
+    ratingContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    ratingText: {
+      marginLeft: 4,
+      fontSize: 11,
+      color: colors.textSecondary,
+      fontWeight: "600",
+    },
+    emptyContainer: {
+      alignItems: "center",
+      paddingVertical: 60,
+      paddingHorizontal: 40,
+    },
+    emptyTitle: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: colors.text,
+      marginBottom: 12,
+      textAlign: "center",
+    },
+    emptySubtitle: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      textAlign: "center",
+      lineHeight: 22,
+      marginBottom: 30,
+    },
+    exploreButton: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: 32,
+      paddingVertical: 16,
+      borderRadius: 25,
+    },
+    exploreButtonText: {
+      color: colors.surface,
+      fontSize: 16,
+      fontWeight: "600",
+    },
+  });
 
 export default FavouritesScreen;
