@@ -10,14 +10,17 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { MapPin, Star, Trash2 } from "react-native-feather";
-import { removeFavourite, clearFavourites } from "../redux/slices/favouritesSlice";
+import {
+  removeFromFavourites,
+  setFavourites,
+} from "../redux/slices/favouritesSlice";
 import { COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 
 const FavouritesScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { items: favourites } = useSelector((state) => state.favourites);
+  const { favourites } = useSelector((state) => state.favourites);
 
   const handleRemoveFavourite = (id) => {
     Alert.alert(
@@ -25,20 +28,20 @@ const FavouritesScreen = () => {
       "Are you sure you want to remove this destination from your favourites?",
       [
         { text: "Cancel", style: "cancel" },
-        { text: "Remove", onPress: () => dispatch(removeFavourite(id)) },
+        { text: "Remove", onPress: () => dispatch(removeFromFavourites(id)) },
       ]
     );
   };
 
   const handleClearAll = () => {
     if (favourites.length === 0) return;
-    
+
     Alert.alert(
       "Clear All Favourites",
       "Are you sure you want to remove all destinations from your favourites?",
       [
         { text: "Cancel", style: "cancel" },
-        { text: "Clear All", onPress: () => dispatch(clearFavourites()) },
+        { text: "Clear All", onPress: () => dispatch(setFavourites([])) },
       ]
     );
   };
@@ -55,7 +58,9 @@ const FavouritesScreen = () => {
         />
         <View style={styles.favouriteInfo}>
           <View style={styles.favouriteHeader}>
-            <Text style={styles.favouriteTitle} numberOfLines={1}>{item.title}</Text>
+            <Text style={styles.favouriteTitle} numberOfLines={1}>
+              {item.title}
+            </Text>
             <TouchableOpacity
               style={styles.removeButton}
               onPress={() => handleRemoveFavourite(item.id)}
@@ -69,10 +74,17 @@ const FavouritesScreen = () => {
           <View style={styles.favouriteFooter}>
             <View style={styles.locationContainer}>
               <MapPin width={12} height={12} stroke={COLORS.textSecondary} />
-              <Text style={styles.locationText}>{item.location || "Unknown"}</Text>
+              <Text style={styles.locationText}>
+                {item.location || "Unknown"}
+              </Text>
             </View>
             <View style={styles.ratingContainer}>
-              <Star width={12} height={12} stroke={COLORS.warning} fill={COLORS.warning} />
+              <Star
+                width={12}
+                height={12}
+                stroke={COLORS.warning}
+                fill={COLORS.warning}
+              />
               <Text style={styles.ratingText}>{item.rating || "4.5"}</Text>
             </View>
           </View>
@@ -114,7 +126,8 @@ const FavouritesScreen = () => {
       {favourites.length > 0 && (
         <View style={styles.countContainer}>
           <Text style={styles.countText}>
-            {favourites.length} {favourites.length === 1 ? "destination" : "destinations"} saved
+            {favourites.length}{" "}
+            {favourites.length === 1 ? "destination" : "destinations"} saved
           </Text>
         </View>
       )}

@@ -12,8 +12,14 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Search, MapPin, Star, Heart } from "react-native-feather";
-import { fetchDestinations, searchDestinations } from "../redux/slices/destinationsSlice";
-import { addFavourite, removeFavourite } from "../redux/slices/favouritesSlice";
+import {
+  fetchDestinations,
+  searchDestinations,
+} from "../redux/slices/destinationsSlice";
+import {
+  addToFavourites,
+  removeFromFavourites,
+} from "../redux/slices/favouritesSlice";
 import { logout } from "../redux/slices/authSlice";
 import { COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
@@ -24,8 +30,10 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
-  const { destinations, loading, error } = useSelector((state) => state.destinations);
-  const { items: favourites } = useSelector((state) => state.favourites);
+  const { destinations, loading, error } = useSelector(
+    (state) => state.destinations
+  );
+  const { favourites } = useSelector((state) => state.favourites);
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -45,26 +53,22 @@ const HomeScreen = () => {
   const handleFavouriteToggle = (destination) => {
     const isFavourite = favourites.some((fav) => fav.id === destination.id);
     if (isFavourite) {
-      dispatch(removeFavourite(destination.id));
+      dispatch(removeFromFavourites(destination.id));
     } else {
-      dispatch(addFavourite(destination));
+      dispatch(addToFavourites(destination));
     }
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Logout", onPress: () => dispatch(logout()) },
-      ]
-    );
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Logout", onPress: () => dispatch(logout()) },
+    ]);
   };
 
   const renderDestination = ({ item }) => {
     const isFavourite = favourites.some((fav) => fav.id === item.id);
-    
+
     return (
       <TouchableOpacity
         style={styles.destinationCard}
@@ -95,10 +99,17 @@ const HomeScreen = () => {
           <View style={styles.destinationFooter}>
             <View style={styles.locationContainer}>
               <MapPin width={14} height={14} stroke={COLORS.textSecondary} />
-              <Text style={styles.locationText}>{item.location || "Unknown"}</Text>
+              <Text style={styles.locationText}>
+                {item.location || "Unknown"}
+              </Text>
             </View>
             <View style={styles.ratingContainer}>
-              <Star width={14} height={14} stroke={COLORS.warning} fill={COLORS.warning} />
+              <Star
+                width={14}
+                height={14}
+                stroke={COLORS.warning}
+                fill={COLORS.warning}
+              />
               <Text style={styles.ratingText}>{item.rating || "4.5"}</Text>
             </View>
           </View>
