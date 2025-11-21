@@ -1,10 +1,13 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import ApiService from '../../services/api';
-import { Destination } from '../../types';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import ApiService from "../../services/api";
+import { Destination } from "../../types";
 
 export const fetchDestinations = createAsyncThunk(
-  'destinations/fetchDestinations',
-  async ({ limit = 20, skip = 0 }: { limit?: number; skip?: number }, { rejectWithValue }) => {
+  "destinations/fetchDestinations",
+  async (
+    { limit = 20, skip = 0 }: { limit?: number; skip?: number },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await ApiService.getDestinations(limit, skip);
       return response;
@@ -15,7 +18,7 @@ export const fetchDestinations = createAsyncThunk(
 );
 
 export const fetchDestination = createAsyncThunk(
-  'destinations/fetchDestination',
+  "destinations/fetchDestination",
   async (id: number, { rejectWithValue }) => {
     try {
       const destination = await ApiService.getDestination(id);
@@ -27,7 +30,7 @@ export const fetchDestination = createAsyncThunk(
 );
 
 export const searchDestinations = createAsyncThunk(
-  'destinations/searchDestinations',
+  "destinations/searchDestinations",
   async (query: string, { rejectWithValue }) => {
     try {
       const response = await ApiService.searchDestinations(query);
@@ -39,7 +42,7 @@ export const searchDestinations = createAsyncThunk(
 );
 
 export const fetchCategories = createAsyncThunk(
-  'destinations/fetchCategories',
+  "destinations/fetchCategories",
   async (_, { rejectWithValue }) => {
     try {
       const categories = await ApiService.getCategories();
@@ -51,14 +54,14 @@ export const fetchCategories = createAsyncThunk(
 );
 
 const destinationsSlice = createSlice({
-  name: 'destinations',
+  name: "destinations",
   initialState: {
     destinations: [] as Destination[],
     currentDestination: null as Destination | null,
     loading: false,
     error: null as string | null,
     categories: [] as string[],
-    searchQuery: '',
+    searchQuery: "",
     selectedCategory: null as string | null,
   },
   reducers: {
@@ -123,5 +126,10 @@ const destinationsSlice = createSlice({
   },
 });
 
-export const { clearError, setSearchQuery, setSelectedCategory, clearCurrentDestination } = destinationsSlice.actions;
+export const {
+  clearError,
+  setSearchQuery,
+  setSelectedCategory,
+  clearCurrentDestination,
+} = destinationsSlice.actions;
 export default destinationsSlice.reducer;
