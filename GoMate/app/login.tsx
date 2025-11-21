@@ -12,9 +12,9 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Map } from "react-native-feather";
-import { loginAsync, clearError } from "../redux/slices/authSlice";
-import { loginSchema } from "../utils/validation";
-import { COLORS, SIZES } from "../constants/theme";
+import { loginAsync, clearError } from "../src/redux/slices/authSlice";
+import { loginSchema } from "../src/utils/validation";
+import { COLORS, SIZES } from "../src/constants/theme";
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
