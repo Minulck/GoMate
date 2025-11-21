@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useDispatch, useSelector } from "react-redux";
-import { Home, Heart } from "react-native-feather";
+import { Home, Heart, Settings } from "react-native-feather";
 import { checkAuthStatus } from "../redux/slices/authSlice";
 import { COLORS } from "../constants/theme";
 
@@ -12,6 +12,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
 import DetailsScreen from "../screens/DetailsScreen";
 import FavouritesScreen from "../screens/FavouritesScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,6 +54,15 @@ const MainTabs = () => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Heart width={size} height={size} stroke={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Settings width={size} height={size} stroke={color} />
           ),
         }}
       />

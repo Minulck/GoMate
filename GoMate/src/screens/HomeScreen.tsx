@@ -9,9 +9,18 @@ import {
   Image,
   FlatList,
   Alert,
+  RefreshControl,
+  Animated,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Search, MapPin, Star, Heart } from "react-native-feather";
+import {
+  Search,
+  MapPin,
+  Star,
+  Heart,
+  LogOut,
+  User,
+} from "react-native-feather";
 import {
   fetchDestinations,
   searchDestinations,
@@ -23,12 +32,20 @@ import {
 import { logout } from "../redux/slices/authSlice";
 import { COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
+import { SkeletonList } from "../components/LoadingSkeleton";
+import { Toast } from "../components/Toast";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [toast, setToast] = useState({
+    visible: false,
+    message: "",
+    type: "success",
+  });
 
   const { destinations, loading, error } = useSelector(
     (state) => state.destinations
@@ -39,6 +56,22 @@ const HomeScreen = () => {
   useEffect(() => {
     dispatch(fetchDestinations());
   }, [dispatch]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setSearchQuery("");
+    await dispatch(fetchDestinations());
+    setRefreshing(false);
+    showToast("Refreshed successfully!", "success");
+  };
+
+  const showToast = (message, type = "success") => {
+    setToast({ visible: true, message, type });
+  };
+
+  const hideToast = () => {
+    setToast({ ...toast, visible: false });
+  };
 
   const handleSearch = async () => {
     if (searchQuery.trim()) {
@@ -54,8 +87,10 @@ const HomeScreen = () => {
     const isFavourite = favourites.some((fav) => fav.id === destination.id);
     if (isFavourite) {
       dispatch(removeFromFavourites(destination.id));
+      showToast("Removed from favourites", "info");
     } else {
       dispatch(addToFavourites(destination));
+      showToast("Added to favourites! ❤️", "success");
     }
   };
 
@@ -120,23 +155,47 @@ const HomeScreen = () => {
 
   if (loading && destinations.length === 0) {
     return (
-      <View style={styles.centerContainer}>
-        <Text style={styles.loadingText}>Loading destinations...</Text>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.welcomeSection}>
+            <Text style={styles.welcomeText}>Welcome back,</Text>
+            <Text style={styles.userName}>
+              {user?.firstName || "Traveler"}!
+            </Text>
+          </View>
+        </View>
+        <SkeletonList count={4} />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        visible={toast.visible}
+        onHide={hideToast}
+      />
+
+      {/* Header with Gradient Effect */}
       <View style={styles.header}>
-        <View style={styles.welcomeSection}>
-          <Text style={styles.welcomeText}>Welcome back,</Text>
-          <Text style={styles.userName}>{user?.firstName || "Traveler"}!</Text>
+        <View style={styles.headerContent}>
+          <View style={styles.userSection}>
+            <View style={styles.avatarContainer}>
+              <User width={24} height={24} stroke={COLORS.surface} />
+            </View>
+            <View style={styles.welcomeSection}>
+              <Text style={styles.welcomeText}>Welcome back,</Text>
+              <Text style={styles.userName}>
+                {user?.firstName || "Traveler"}!
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <LogOut width={20} height={20} stroke={COLORS.surface} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
       </View>
 
       {/* Search Bar */}
@@ -171,17 +230,27 @@ const HomeScreen = () => {
         </View>
       )}
 
-      {/* Destinations List */}
+      {/* Destinations List with Pull-to-Refresh */}
       <FlatList
         data={destinations}
         renderItem={renderDestination}
         keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[COLORS.primary]}
+            tintColor={COLORS.primary}
+          />
+        }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>No destinations found</Text>
-            <Text style={styles.emptySubtext}>Try a different search term</Text>
+            <Text style={styles.emptySubtext}>
+              Try a different search term or pull to refresh
+            </Text>
           </View>
         }
       />
@@ -205,36 +274,59 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
   header: {
+    backgroundColor: COLORS.primary,
+    paddingTop: 50,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  headerContent: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 50,
-    paddingBottom: 20,
-    backgroundColor: COLORS.primary,
+  },
+  userSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  avatarContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
   },
   welcomeSection: {
     flex: 1,
   },
   welcomeText: {
-    fontSize: 16,
+    fontSize: 14,
     color: COLORS.surface,
-    opacity: 0.8,
+    opacity: 0.9,
+    fontWeight: "500",
   },
   userName: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontWeight: "700",
     color: COLORS.surface,
+    marginTop: 2,
   },
   logoutButton: {
-    backgroundColor: "rgba(255,255,255,0.2)",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    width: 40,
+    height: 40,
     borderRadius: 20,
-  },
-  logoutText: {
-    color: COLORS.surface,
-    fontWeight: "600",
+    backgroundColor: "rgba(255,255,255,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   searchContainer: {
     flexDirection: "row",
@@ -287,19 +379,19 @@ const styles = StyleSheet.create({
   },
   destinationCard: {
     backgroundColor: COLORS.surface,
-    borderRadius: 16,
-    marginBottom: 16,
+    borderRadius: 20,
+    marginBottom: 20,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 5,
+    overflow: "hidden",
   },
   destinationImage: {
     width: "100%",
-    height: 200,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    height: 220,
+    backgroundColor: COLORS.border,
   },
   destinationInfo: {
     padding: 16,
