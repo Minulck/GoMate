@@ -16,6 +16,7 @@ import {
 } from "../redux/slices/favouritesSlice";
 import { COLORS } from "../constants/theme";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useTheme } from "../contexts/ThemeContext";
 
 const { width } = Dimensions.get("window");
 
@@ -23,7 +24,10 @@ const DetailsScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
+  const { colors } = useTheme();
   const { destination } = route.params || {};
+
+  const styles = createStyles(colors);
 
   const { favourites } = useSelector((state) => state.favourites);
   const isFavourite = favourites.some((fav) => fav.id === destination?.id);
@@ -67,7 +71,7 @@ const DetailsScreen = () => {
 
         {/* Back Button */}
         <TouchableOpacity style={styles.backIcon} onPress={handleBack}>
-          <ArrowLeft width={24} height={24} stroke={COLORS.surface} />
+          <ArrowLeft width={24} height={24} stroke={colors.surface} />
         </TouchableOpacity>
 
         {/* Favourite Button */}
@@ -78,8 +82,8 @@ const DetailsScreen = () => {
           <Heart
             width={24}
             height={24}
-            stroke={isFavourite ? COLORS.primary : COLORS.surface}
-            fill={isFavourite ? COLORS.primary : "transparent"}
+            stroke={isFavourite ? colors.primary : colors.surface}
+            fill={isFavourite ? colors.primary : "transparent"}
           />
         </TouchableOpacity>
       </View>
@@ -93,8 +97,8 @@ const DetailsScreen = () => {
             <Star
               width={16}
               height={16}
-              stroke={COLORS.warning}
-              fill={COLORS.warning}
+              stroke={colors.warning}
+              fill={colors.warning}
             />
             <Text style={styles.rating}>{destination.rating || "4.5"}</Text>
           </View>
@@ -102,7 +106,7 @@ const DetailsScreen = () => {
 
         {/* Location */}
         <View style={styles.locationContainer}>
-          <MapPin width={16} height={16} stroke={COLORS.textSecondary} />
+          <MapPin width={16} height={16} stroke={colors.textSecondary} />
           <Text style={styles.location}>
             {destination.location || "Unknown Location"}
           </Text>
@@ -119,24 +123,31 @@ const DetailsScreen = () => {
 
         {/* Additional Details */}
         <View style={styles.detailsSection}>
-          <Text style={styles.sectionTitle}>Details</Text>
+          <Text style={styles.sectionTitle}>Trip Details</Text>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Category:</Text>
+            <Text style={styles.detailLabel}>📍 Location:</Text>
             <Text style={styles.detailValue}>
-              {destination.category || "Travel"}
+              {destination.location || "Unknown Location"}
             </Text>
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Price:</Text>
+            <Text style={styles.detailLabel}>💰 Price:</Text>
             <Text style={styles.detailValue}>${destination.price || "99"}</Text>
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Duration:</Text>
+            <Text style={styles.detailLabel}>⏱️ Duration:</Text>
             <Text style={styles.detailValue}>
               {destination.duration || "1-3 days"}
+            </Text>
+          </View>
+
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>🏷️ Category:</Text>
+            <Text style={styles.detailValue}>
+              {destination.category || "Travel"}
             </Text>
           </View>
         </View>
@@ -150,8 +161,8 @@ const DetailsScreen = () => {
             <Heart
               width={20}
               height={20}
-              stroke={isFavourite ? COLORS.surface : COLORS.primary}
-              fill={isFavourite ? COLORS.surface : "transparent"}
+              stroke={isFavourite ? colors.surface : colors.primary}
+              fill={isFavourite ? colors.surface : "transparent"}
             />
             <Text
               style={[
@@ -172,32 +183,32 @@ const DetailsScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
   },
   errorContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
     paddingHorizontal: 20,
   },
   errorText: {
     fontSize: 18,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     marginBottom: 20,
     textAlign: "center",
   },
   backButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 25,
   },
   backButtonText: {
-    color: COLORS.surface,
+    color: colors.surface,
     fontWeight: "600",
   },
   imageContainer: {
@@ -241,13 +252,13 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 28,
     fontWeight: "bold",
-    color: COLORS.text,
+    color: colors.text,
     marginRight: 16,
   },
   ratingContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 15,
@@ -261,7 +272,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.text,
+    color: colors.text,
   },
   locationContainer: {
     flexDirection: "row",
@@ -271,7 +282,7 @@ const styles = StyleSheet.create({
   location: {
     marginLeft: 8,
     fontSize: 16,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
   },
   descriptionSection: {
     marginBottom: 24,
@@ -279,12 +290,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 12,
   },
   description: {
     fontSize: 16,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     lineHeight: 24,
   },
   detailsSection: {
@@ -296,16 +307,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   detailLabel: {
     fontSize: 16,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
   },
   detailValue: {
     fontSize: 16,
     fontWeight: "600",
-    color: COLORS.text,
+    color: colors.text,
   },
   actionButtons: {
     gap: 12,
@@ -320,25 +331,25 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   favouriteButton: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 2,
-    borderColor: COLORS.primary,
+    borderColor: colors.primary,
   },
   actionButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: COLORS.primary,
+    color: colors.primary,
   },
   favouriteButtonText: {
-    color: COLORS.surface,
+    color: colors.surface,
   },
   bookButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
   },
   bookButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: COLORS.surface,
+    color: colors.surface,
   },
 });
 

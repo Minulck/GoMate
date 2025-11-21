@@ -34,10 +34,12 @@ import { COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import { SkeletonList } from "../components/LoadingSkeleton";
 import { Toast } from "../components/Toast";
+import { useTheme } from "../contexts/ThemeContext";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const { colors, isDarkMode } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -95,10 +97,21 @@ const HomeScreen = () => {
   };
 
   const handleLogout = () => {
-    Alert.alert("Logout", "Are you sure you want to logout?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Logout", onPress: () => dispatch(logout()) },
-    ]);
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Logout", 
+          onPress: () => {
+            dispatch(logout());
+          },
+          style: "destructive"
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const renderDestination = ({ item }) => {
@@ -123,8 +136,8 @@ const HomeScreen = () => {
               <Heart
                 width={20}
                 height={20}
-                stroke={isFavourite ? COLORS.primary : COLORS.textSecondary}
-                fill={isFavourite ? COLORS.primary : "transparent"}
+                stroke={isFavourite ? colors.primary : colors.textSecondary}
+                fill={isFavourite ? colors.primary : "transparent"}
               />
             </TouchableOpacity>
           </View>
@@ -133,7 +146,7 @@ const HomeScreen = () => {
           </Text>
           <View style={styles.destinationFooter}>
             <View style={styles.locationContainer}>
-              <MapPin width={14} height={14} stroke={COLORS.textSecondary} />
+              <MapPin width={14} height={14} stroke={colors.textSecondary} />
               <Text style={styles.locationText}>
                 {item.location || "Unknown"}
               </Text>
@@ -142,8 +155,8 @@ const HomeScreen = () => {
               <Star
                 width={14}
                 height={14}
-                stroke={COLORS.warning}
-                fill={COLORS.warning}
+                stroke={colors.warning}
+                fill={colors.warning}
               />
               <Text style={styles.ratingText}>{item.rating || "4.5"}</Text>
             </View>
@@ -152,6 +165,8 @@ const HomeScreen = () => {
       </TouchableOpacity>
     );
   };
+
+  const styles = createStyles(colors);
 
   if (loading && destinations.length === 0) {
     return (
@@ -183,7 +198,7 @@ const HomeScreen = () => {
         <View style={styles.headerContent}>
           <View style={styles.userSection}>
             <View style={styles.avatarContainer}>
-              <User width={24} height={24} stroke={COLORS.surface} />
+              <User width={24} height={24} stroke={colors.surface} />
             </View>
             <View style={styles.welcomeSection}>
               <Text style={styles.welcomeText}>Welcome back,</Text>
@@ -192,8 +207,13 @@ const HomeScreen = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <LogOut width={20} height={20} stroke={COLORS.surface} />
+          <TouchableOpacity 
+            style={styles.logoutButton} 
+            onPress={handleLogout}
+            activeOpacity={0.7}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <LogOut width={20} height={20} stroke={colors.surface} />
           </TouchableOpacity>
         </View>
       </View>
@@ -201,11 +221,11 @@ const HomeScreen = () => {
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
-          <Search width={20} height={20} stroke={COLORS.textSecondary} />
+          <Search width={20} height={20} stroke={colors.textSecondary} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search destinations..."
-            placeholderTextColor={COLORS.textSecondary}
+            placeholderTextColor={colors.textSecondary}
             value={searchQuery}
             onChangeText={setSearchQuery}
             onSubmitEditing={handleSearch}
@@ -241,8 +261,8 @@ const HomeScreen = () => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={[COLORS.primary]}
-            tintColor={COLORS.primary}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
           />
         }
         ListEmptyComponent={
@@ -258,23 +278,23 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
   },
   centerContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
   },
   loadingText: {
     fontSize: 16,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
   },
   header: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingTop: 50,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -300,7 +320,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: colors.border,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
@@ -310,21 +330,21 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 14,
-    color: COLORS.surface,
+    color: colors.surface,
     opacity: 0.9,
     fontWeight: "500",
   },
   userName: {
     fontSize: 20,
     fontWeight: "700",
-    color: COLORS.surface,
+    color: colors.surface,
     marginTop: 2,
   },
   logoutButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: colors.border,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -332,7 +352,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -343,7 +363,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
     borderRadius: 25,
     paddingHorizontal: 16,
     marginRight: 12,
@@ -352,33 +372,33 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 12,
     fontSize: 16,
-    color: COLORS.text,
+    color: colors.text,
   },
   searchButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 25,
     justifyContent: "center",
   },
   searchButtonText: {
-    color: COLORS.surface,
+    color: colors.surface,
     fontWeight: "600",
   },
   errorContainer: {
-    backgroundColor: COLORS.error,
+    backgroundColor: colors.error,
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
   errorText: {
-    color: COLORS.surface,
+    color: colors.surface,
     textAlign: "center",
   },
   listContainer: {
     padding: 20,
   },
   destinationCard: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: 20,
     marginBottom: 20,
     shadowColor: "#000",
@@ -391,7 +411,7 @@ const styles = StyleSheet.create({
   destinationImage: {
     width: "100%",
     height: 220,
-    backgroundColor: COLORS.border,
+    backgroundColor: colors.border,
   },
   destinationInfo: {
     padding: 16,
@@ -406,7 +426,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     fontWeight: "bold",
-    color: COLORS.text,
+    color: colors.text,
     marginRight: 12,
   },
   favouriteButton: {
@@ -414,7 +434,7 @@ const styles = StyleSheet.create({
   },
   destinationDescription: {
     fontSize: 14,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -430,7 +450,7 @@ const styles = StyleSheet.create({
   locationText: {
     marginLeft: 4,
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
   },
   ratingContainer: {
     flexDirection: "row",
@@ -439,7 +459,7 @@ const styles = StyleSheet.create({
   ratingText: {
     marginLeft: 4,
     fontSize: 12,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontWeight: "600",
   },
   emptyContainer: {
@@ -449,12 +469,12 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     fontWeight: "600",
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     marginBottom: 8,
   },
   emptySubtext: {
     fontSize: 14,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
   },
 });
 

@@ -16,11 +16,15 @@ import {
 } from "../redux/slices/favouritesSlice";
 import { COLORS } from "../constants/theme";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "../contexts/ThemeContext";
 
 const FavouritesScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const { colors, isDarkMode } = useTheme();
   const { favourites } = useSelector((state) => state.favourites);
+
+  const styles = createStyles(colors);
 
   const handleRemoveFavourite = (id) => {
     Alert.alert(
@@ -65,7 +69,7 @@ const FavouritesScreen = () => {
               style={styles.removeButton}
               onPress={() => handleRemoveFavourite(item.id)}
             >
-              <Trash2 width={18} height={18} stroke={COLORS.error} />
+              <Trash2 width={18} height={18} stroke={colors.error} />
             </TouchableOpacity>
           </View>
           <Text style={styles.favouriteDescription} numberOfLines={2}>
@@ -73,7 +77,7 @@ const FavouritesScreen = () => {
           </Text>
           <View style={styles.favouriteFooter}>
             <View style={styles.locationContainer}>
-              <MapPin width={12} height={12} stroke={COLORS.textSecondary} />
+              <MapPin width={12} height={12} stroke={colors.textSecondary} />
               <Text style={styles.locationText}>
                 {item.location || "Unknown"}
               </Text>
@@ -82,8 +86,8 @@ const FavouritesScreen = () => {
               <Star
                 width={12}
                 height={12}
-                stroke={COLORS.warning}
-                fill={COLORS.warning}
+                stroke={colors.warning}
+                fill={colors.warning}
               />
               <Text style={styles.ratingText}>{item.rating || "4.5"}</Text>
             </View>
@@ -145,10 +149,10 @@ const FavouritesScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (colors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: "row",
@@ -157,34 +161,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 50,
     paddingBottom: 20,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: COLORS.surface,
+    color: colors.surface,
   },
   clearButton: {
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: colors.border,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
   },
   clearButtonText: {
-    color: COLORS.surface,
+    color: colors.surface,
     fontWeight: "600",
     fontSize: 14,
   },
   countContainer: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   countText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontWeight: "500",
   },
   listContainer: {
@@ -192,7 +196,7 @@ const styles = StyleSheet.create({
   },
   favouriteCard: {
     flexDirection: "row",
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: 12,
     marginBottom: 12,
     shadowColor: "#000",
@@ -222,7 +226,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: "bold",
-    color: COLORS.text,
+    color: colors.text,
     marginRight: 8,
   },
   removeButton: {
@@ -230,7 +234,7 @@ const styles = StyleSheet.create({
   },
   favouriteDescription: {
     fontSize: 13,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     lineHeight: 18,
     marginBottom: 8,
   },
@@ -247,7 +251,7 @@ const styles = StyleSheet.create({
   locationText: {
     marginLeft: 4,
     fontSize: 11,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
   },
   ratingContainer: {
     flexDirection: "row",
@@ -256,7 +260,7 @@ const styles = StyleSheet.create({
   ratingText: {
     marginLeft: 4,
     fontSize: 11,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontWeight: "600",
   },
   emptyContainer: {
@@ -267,25 +271,25 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 12,
     textAlign: "center",
   },
   emptySubtitle: {
     fontSize: 16,
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     textAlign: "center",
     lineHeight: 22,
     marginBottom: 30,
   },
   exploreButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 25,
   },
   exploreButtonText: {
-    color: COLORS.surface,
+    color: colors.surface,
     fontSize: 16,
     fontWeight: "600",
   },

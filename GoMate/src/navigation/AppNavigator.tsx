@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useDispatch, useSelector } from "react-redux";
 import { Home, Heart, Settings } from "react-native-feather";
 import { checkAuthStatus } from "../redux/slices/authSlice";
-import { COLORS } from "../constants/theme";
+import { useTheme } from "../contexts/ThemeContext";
 
 // Import screens
 import LoginScreen from "../screens/LoginScreen";
@@ -19,16 +19,18 @@ const Tab = createBottomTabNavigator();
 
 // Main Tab Navigator (for authenticated users)
 const MainTabs = () => {
+  const { colors } = useTheme();
+  
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.textSecondary,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: {
-          backgroundColor: COLORS.surface,
+          backgroundColor: colors.surface,
           borderTopWidth: 1,
-          borderTopColor: COLORS.border,
+          borderTopColor: colors.border,
           height: 60,
           paddingBottom: 8,
           paddingTop: 8,

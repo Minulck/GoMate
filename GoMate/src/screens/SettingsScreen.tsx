@@ -24,11 +24,18 @@ const SettingsScreen = () => {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       {/* Header */}
       <View style={[styles.header, { backgroundColor: colors.primary }]}>
         <View style={styles.headerContent}>
-          <View style={[styles.avatarLarge, { backgroundColor: "rgba(255,255,255,0.2)" }]}>
+          <View
+            style={[
+              styles.avatarLarge,
+              { backgroundColor: "rgba(255,255,255,0.2)" },
+            ]}
+          >
             <User width={40} height={40} stroke={colors.surface} />
           </View>
           <Text style={[styles.userName, { color: colors.surface }]}>
@@ -46,8 +53,10 @@ const SettingsScreen = () => {
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Appearance
           </Text>
-          
-          <View style={[styles.settingItem, { borderBottomColor: colors.border }]}>
+
+          <View
+            style={[styles.settingItem, { borderBottomColor: colors.border }]}
+          >
             <View style={styles.settingLeft}>
               {isDarkMode ? (
                 <Moon width={22} height={22} stroke={colors.text} />
@@ -71,7 +80,7 @@ const SettingsScreen = () => {
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Account
           </Text>
-          
+
           <TouchableOpacity
             style={[styles.settingItem, { borderBottomColor: colors.border }]}
           >
@@ -83,10 +92,7 @@ const SettingsScreen = () => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.settingItem}
-            onPress={handleLogout}
-          >
+          <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
             <View style={styles.settingLeft}>
               <LogOut width={22} height={22} stroke={colors.danger} />
               <Text style={[styles.settingText, { color: colors.danger }]}>
