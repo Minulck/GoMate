@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ArrowLeft, MapPin, Star, Heart } from "react-native-feather";
-import { addToFavourites, removeFromFavourites } from "../redux/slices/favouritesSlice";
+import {
+  addToFavourites,
+  removeFromFavourites,
+} from "../redux/slices/favouritesSlice";
 import { COLORS } from "../constants/theme";
 import { useNavigation, useRoute } from "@react-navigation/native";
 

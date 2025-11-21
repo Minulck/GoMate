@@ -63,6 +63,8 @@ export const COLORS = {
   textLight: "#9BA1A6",
   border: "#e1e5e9",
   danger: "#dc3545",
+  error: "#dc3545",
+  warning: "#ffc107",
 };
 
 export const SIZES = {
