@@ -1,70 +1,81 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  Alert,
+  FlatList,
+  RefreshControl,
   StyleSheet,
-  ScrollView,
+  Text,
   TextInput,
   TouchableOpacity,
-  Image,
-  FlatList,
-  Alert,
-  RefreshControl,
-  Animated,
+  View,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  Search,
-  MapPin,
-  Star,
+  Clock,
   Heart,
   LogOut,
+  MapPin,
+  Search,
   User,
 } from "react-native-feather";
+import { useDispatch, useSelector } from "react-redux";
+import { SkeletonList } from "../components/LoadingSkeleton";
+import { Toast } from "../components/Toast";
+import { useTheme } from "../contexts/ThemeContext";
+import { logout } from "../redux/slices/authSlice";
 import {
-  fetchDestinations,
-  searchDestinations,
-} from "../redux/slices/destinationsSlice";
+  fetchBusStops,
+  fetchStopTimetable,
+  searchBusStops,
+} from "../redux/slices/busSlice";
 import {
   addToFavourites,
   removeFromFavourites,
 } from "../redux/slices/favouritesSlice";
-import { logout } from "../redux/slices/authSlice";
-import { COLORS } from "../constants/theme";
-import { useNavigation } from "@react-navigation/native";
-import { SkeletonList } from "../components/LoadingSkeleton";
-import { Toast } from "../components/Toast";
-import { useTheme } from "../contexts/ThemeContext";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { colors, isDarkMode } = useTheme();
+  const { colors } = useTheme();
+  const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [toast, setToast] = useState({
     visible: false,
     message: "",
     type: "success",
   });
 
-  const { destinations, loading, error } = useSelector(
-    (state) => state.destinations
-  );
+  const { stops, loading, error } = useSelector((state) => state.bus);
   const { favourites } = useSelector((state) => state.favourites);
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(fetchDestinations());
+    dispatch(fetchBusStops());
   }, [dispatch]);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    setSearchQuery("");
-    await dispatch(fetchDestinations());
+    await dispatch(fetchBusStops());
     setRefreshing(false);
     showToast("Refreshed successfully!", "success");
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      showToast("Please enter a search term", "error");
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      await dispatch(searchBusStops(searchQuery.trim()));
+      showToast(`Found results for "${searchQuery}"`, "success");
+    } catch (error) {
+      showToast("Search failed. Please try again.", "error");
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const showToast = (message, type = "success") => {
@@ -75,23 +86,15 @@ const HomeScreen = () => {
     setToast({ ...toast, visible: false });
   };
 
-  const handleSearch = async () => {
-    if (searchQuery.trim()) {
-      setIsSearching(true);
-      await dispatch(searchDestinations(searchQuery));
-      setIsSearching(false);
-    } else {
-      dispatch(fetchDestinations());
-    }
-  };
-
-  const handleFavouriteToggle = (destination) => {
-    const isFavourite = favourites.some((fav) => fav.id === destination.id);
+  const handleFavouriteToggle = (stop) => {
+    const isFavourite = favourites.some(
+      (fav) => fav.atcocode === stop.atcocode
+    );
     if (isFavourite) {
-      dispatch(removeFromFavourites(destination.id));
+      dispatch(removeFromFavourites(stop.atcocode));
       showToast("Removed from favourites", "info");
     } else {
-      dispatch(addToFavourites(destination));
+      dispatch(addToFavourites(stop));
       showToast("Added to favourites! ❤️", "success");
     }
   };
@@ -114,21 +117,27 @@ const HomeScreen = () => {
     );
   };
 
-  const renderDestination = ({ item }) => {
-    const isFavourite = favourites.some((fav) => fav.id === item.id);
+  const renderBusStop = ({ item }) => {
+    const isFavourite = favourites.some(
+      (fav) => fav.atcocode === item.atcocode
+    );
 
     return (
       <TouchableOpacity
         style={styles.destinationCard}
-        onPress={() => navigation.navigate("Details", { destination: item })}
+        onPress={() => {
+          dispatch(fetchStopTimetable(item.atcocode));
+          navigation.navigate("Details", { stop: item });
+        }}
       >
-        <Image
-          source={{ uri: item.image || "https://via.placeholder.com/300x200" }}
-          style={styles.destinationImage}
-        />
+        <View style={styles.destinationImage}>
+          <View style={styles.busStopIcon}>
+            <Clock width={40} height={40} stroke={colors.primary} />
+          </View>
+        </View>
         <View style={styles.destinationInfo}>
           <View style={styles.destinationHeader}>
-            <Text style={styles.destinationTitle}>{item.title}</Text>
+            <Text style={styles.destinationTitle}>{item.name}</Text>
             <TouchableOpacity
               style={styles.favouriteButton}
               onPress={() => handleFavouriteToggle(item)}
@@ -142,23 +151,15 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
           <Text style={styles.destinationDescription} numberOfLines={2}>
-            {item.description}
+            Bus stop in {item.locality}
           </Text>
           <View style={styles.destinationFooter}>
             <View style={styles.locationContainer}>
               <MapPin width={14} height={14} stroke={colors.textSecondary} />
-              <Text style={styles.locationText}>
-                {item.location || "Unknown"}
-              </Text>
+              <Text style={styles.locationText}>{item.locality}</Text>
             </View>
             <View style={styles.ratingContainer}>
-              <Star
-                width={14}
-                height={14}
-                stroke={colors.warning}
-                fill={colors.warning}
-              />
-              <Text style={styles.ratingText}>{item.rating || "4.5"}</Text>
+              <Text style={styles.ratingText}>{item.atcocode}</Text>
             </View>
           </View>
         </View>
@@ -168,7 +169,7 @@ const HomeScreen = () => {
 
   const styles = createStyles(colors);
 
-  if (loading && destinations.length === 0) {
+  if (loading && stops.length === 0) {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -224,7 +225,7 @@ const HomeScreen = () => {
           <Search width={20} height={20} stroke={colors.textSecondary} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search destinations..."
+            placeholder="Search bus stops..."
             placeholderTextColor={colors.textSecondary}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -250,11 +251,11 @@ const HomeScreen = () => {
         </View>
       )}
 
-      {/* Destinations List with Pull-to-Refresh */}
+      {/* Bus Stops List with Pull-to-Refresh */}
       <FlatList
-        data={destinations}
-        renderItem={renderDestination}
-        keyExtractor={(item) => item.id.toString()}
+        data={stops}
+        renderItem={renderBusStop}
+        keyExtractor={(item) => item.atcocode}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
         refreshControl={
@@ -267,9 +268,13 @@ const HomeScreen = () => {
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No destinations found</Text>
+            <Text style={styles.emptyText}>
+              {searchQuery ? "No bus stops found" : "No bus stops available"}
+            </Text>
             <Text style={styles.emptySubtext}>
-              Try a different search term or pull to refresh
+              {searchQuery
+                ? "Try a different search term or pull to refresh"
+                : "Pull to refresh to load bus stops"}
             </Text>
           </View>
         }
@@ -413,6 +418,13 @@ const createStyles = (colors: any) =>
       width: "100%",
       height: 220,
       backgroundColor: colors.border,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    busStopIcon: {
+      backgroundColor: colors.surface,
+      borderRadius: 40,
+      padding: 20,
     },
     destinationInfo: {
       padding: 16,

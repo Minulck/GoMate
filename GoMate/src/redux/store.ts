@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
-import destinationsReducer from "./slices/destinationsSlice";
+import busReducer from "./slices/busSlice";
 import favouritesReducer from "./slices/favouritesSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    destinations: destinationsReducer,
+    bus: busReducer,
     favourites: favouritesReducer,
   },
 });

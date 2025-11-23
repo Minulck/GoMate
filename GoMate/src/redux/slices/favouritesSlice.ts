@@ -1,40 +1,40 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Destination } from "../../types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { BusStop } from "../../types";
 
 const FAVOURITES_KEY = "favourites";
 
 const favouritesSlice = createSlice({
   name: "favourites",
   initialState: {
-    favourites: [] as Destination[],
+    favourites: [] as BusStop[],
   },
   reducers: {
-    setFavourites: (state, action: PayloadAction<Destination[]>) => {
+    setFavourites: (state, action: PayloadAction<BusStop[]>) => {
       state.favourites = action.payload;
     },
-    addToFavourites: (state, action: PayloadAction<Destination>) => {
+    addToFavourites: (state, action: PayloadAction<BusStop>) => {
       const exists = state.favourites.find(
-        (item) => item.id === action.payload.id
+        (item) => item.atcocode === action.payload.atcocode
       );
       if (!exists) {
         state.favourites.push(action.payload);
         AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
       }
     },
-    removeFromFavourites: (state, action: PayloadAction<number>) => {
+    removeFromFavourites: (state, action: PayloadAction<string>) => {
       state.favourites = state.favourites.filter(
-        (item) => item.id !== action.payload
+        (item) => item.atcocode !== action.payload
       );
       AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
     },
-    toggleFavourite: (state, action: PayloadAction<Destination>) => {
+    toggleFavourite: (state, action: PayloadAction<BusStop>) => {
       const exists = state.favourites.find(
-        (item) => item.id === action.payload.id
+        (item) => item.atcocode === action.payload.atcocode
       );
       if (exists) {
         state.favourites = state.favourites.filter(
-          (item) => item.id !== action.payload.id
+          (item) => item.atcocode !== action.payload.atcocode
         );
       } else {
         state.favourites.push(action.payload);

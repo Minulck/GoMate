@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import { Map } from "react-native-feather";
-import { loginAsync, clearError } from "../redux/slices/authSlice";
-import { loginSchema } from "../utils/validation";
+import { useDispatch, useSelector } from "react-redux";
 import { COLORS, SIZES } from "../constants/theme";
+import { clearError, loginAsync } from "../redux/slices/authSlice";
+import { loginSchema } from "../utils/validation";
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -113,7 +113,7 @@ const LoginScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Don't have an account? </Text>
+            <Text style={styles.footerText}>Don&apos;t have an account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Register")}>
               <Text style={styles.linkText}>Sign Up</Text>
             </TouchableOpacity>

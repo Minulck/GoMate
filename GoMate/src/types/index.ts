@@ -1,13 +1,62 @@
-export interface Destination {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  price: number;
-  category: string;
-  tags: string[];
-  rating: number;
-  thumbnail: string;
+export interface BusStop {
+  atcocode: string;
+  name: string;
+  locality: string;
+  timing_point: boolean;
+  time?: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+export interface BusService {
+  id: string;
+  operator: {
+    code: string;
+    name: string;
+  };
+  line: string;
+  line_name: string;
+  directions: Direction[];
+}
+
+export interface Direction {
+  name: "inbound" | "outbound";
+  destination: { description: string };
+  journey_patterns?: JourneyPattern[];
+}
+
+export interface JourneyPattern {
+  stops: { atcocode: string }[];
+  count: number;
+}
+
+export interface Departure {
+  line: string;
+  direction: string;
+  operator: string;
+  aimed_departure_time: string;
+  expected_departure_time?: string;
+  best_departure_estimate?: string;
+  source: string;
+  mode: string;
+  operator_name: string;
+  service_timetable?: {
+    id: string;
+  };
+}
+
+export interface StopTimetable {
+  atcocode: string;
+  name: string;
+  locality: string;
+  departures: Departure[];
+}
+
+export interface JourneyTimetable {
+  operator: string;
+  line: string;
+  direction: string;
+  stops: BusStop[];
 }
 
 export interface User {
@@ -40,23 +89,25 @@ export interface AuthState {
   error: string | null;
 }
 
-export interface DestinationsState {
-  destinations: Destination[];
-  currentDestination: Destination | null;
+export interface BusState {
+  stops: BusStop[];
+  currentStop: BusStop | null;
+  services: BusService[];
+  currentService: BusService | null;
+  timetable: StopTimetable | null;
+  journeyTimetable: JourneyTimetable | null;
   loading: boolean;
   error: string | null;
-  categories: string[];
   searchQuery: string;
-  selectedCategory: string | null;
 }
 
 export interface FavouritesState {
-  favourites: Destination[];
+  favourites: BusStop[];
 }
 
 export interface RootState {
   auth: AuthState;
-  destinations: DestinationsState;
+  bus: BusState;
   favourites: FavouritesState;
 }
 

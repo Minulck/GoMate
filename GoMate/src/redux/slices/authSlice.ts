@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiService from "../../services/api";
-import { User, LoginCredentials } from "../../types";
+import { LoginCredentials, User } from "../../types";
 
 // Async thunk for login
 export const loginAsync = createAsyncThunk(

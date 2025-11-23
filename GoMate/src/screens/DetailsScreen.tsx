@@ -1,44 +1,42 @@
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
+  FlatList,
   ScrollView,
-  Image,
+  StyleSheet,
+  Text,
   TouchableOpacity,
-  Dimensions,
+  View,
 } from "react-native";
+import { ArrowLeft, Heart, MapPin } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
-import { ArrowLeft, MapPin, Star, Heart } from "react-native-feather";
+import { useTheme } from "../contexts/ThemeContext";
 import {
   addToFavourites,
   removeFromFavourites,
 } from "../redux/slices/favouritesSlice";
-import { COLORS } from "../constants/theme";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { useTheme } from "../contexts/ThemeContext";
-
-const { width } = Dimensions.get("window");
 
 const DetailsScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
   const { colors } = useTheme();
-  const { destination } = route.params || {};
+  const { stop } = route.params || {};
 
   const styles = createStyles(colors);
 
   const { favourites } = useSelector((state) => state.favourites);
-  const isFavourite = favourites.some((fav) => fav.id === destination?.id);
+  const { timetable, loading } = useSelector((state) => state.bus);
+  const isFavourite = favourites.some((fav) => fav.atcocode === stop?.atcocode);
 
   const handleFavouriteToggle = () => {
-    if (!destination) return;
+    if (!stop) return;
 
     if (isFavourite) {
-      dispatch(removeFromFavourites(destination.id));
+      dispatch(removeFromFavourites(stop.atcocode));
     } else {
-      dispatch(addToFavourites(destination));
+      dispatch(addToFavourites(stop));
     }
   };
 
@@ -46,10 +44,34 @@ const DetailsScreen = () => {
     navigation.goBack();
   };
 
-  if (!destination) {
+  const renderDeparture = ({ item }) => (
+    <View style={styles.departureItem}>
+      <View style={styles.departureHeader}>
+        <View style={styles.busIcon}>
+          <MaterialIcons
+            name="directions-bus"
+            size={20}
+            color={colors.primary}
+          />
+        </View>
+        <View style={styles.departureInfo}>
+          <Text style={styles.lineText}>{item.line}</Text>
+          <Text style={styles.directionText}>{item.direction}</Text>
+        </View>
+        <Text style={styles.timeText}>
+          {item.best_departure_estimate ||
+            item.expected_departure_time ||
+            item.aimed_departure_time}
+        </Text>
+      </View>
+      <Text style={styles.operatorText}>{item.operator_name}</Text>
+    </View>
+  );
+
+  if (!stop) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Destination not found</Text>
+        <Text style={styles.errorText}>Bus stop not found</Text>
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Text style={styles.backButtonText}>Go Back</Text>
         </TouchableOpacity>
@@ -59,15 +81,9 @@ const DetailsScreen = () => {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Header Image */}
-      <View style={styles.imageContainer}>
-        <Image
-          source={{
-            uri: destination.image || "https://via.placeholder.com/400x300",
-          }}
-          style={styles.headerImage}
-        />
-        <View style={styles.overlay} />
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerOverlay} />
 
         {/* Back Button */}
         <TouchableOpacity style={styles.backIcon} onPress={handleBack}>
@@ -90,66 +106,57 @@ const DetailsScreen = () => {
 
       {/* Content */}
       <View style={styles.content}>
-        {/* Title and Rating */}
+        {/* Title and Location */}
         <View style={styles.titleSection}>
-          <Text style={styles.title}>{destination.title}</Text>
-          <View style={styles.ratingContainer}>
-            <Star
-              width={16}
-              height={16}
-              stroke={colors.warning}
-              fill={colors.warning}
+          <Text style={styles.title}>{stop.name}</Text>
+          <View style={styles.locationContainer}>
+            <MapPin width={16} height={16} stroke={colors.textSecondary} />
+            <Text style={styles.location}>{stop.locality}</Text>
+          </View>
+        </View>
+
+        {/* Timetable */}
+        <View style={styles.timetableSection}>
+          <Text style={styles.sectionTitle}>Departures</Text>
+          {loading ? (
+            <Text style={styles.loadingText}>Loading timetable...</Text>
+          ) : timetable && timetable.departures.length > 0 ? (
+            <FlatList
+              data={timetable.departures}
+              renderItem={renderDeparture}
+              keyExtractor={(item, index) => `${item.line}-${index}`}
+              showsVerticalScrollIndicator={false}
+              scrollEnabled={false}
             />
-            <Text style={styles.rating}>{destination.rating || "4.5"}</Text>
-          </View>
+          ) : (
+            <Text style={styles.noDeparturesText}>No departures available</Text>
+          )}
         </View>
 
-        {/* Location */}
-        <View style={styles.locationContainer}>
-          <MapPin width={16} height={16} stroke={colors.textSecondary} />
-          <Text style={styles.location}>
-            {destination.location || "Unknown Location"}
-          </Text>
-        </View>
-
-        {/* Description */}
-        <View style={styles.descriptionSection}>
-          <Text style={styles.sectionTitle}>About</Text>
-          <Text style={styles.description}>
-            {destination.description ||
-              "No description available for this destination."}
-          </Text>
-        </View>
-
-        {/* Additional Details */}
+        {/* Stop Details */}
         <View style={styles.detailsSection}>
-          <Text style={styles.sectionTitle}>Trip Details</Text>
+          <Text style={styles.sectionTitle}>Stop Details</Text>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>📍 Location:</Text>
+            <Text style={styles.detailLabel}>ATCO Code:</Text>
+            <Text style={styles.detailValue}>{stop.atcocode}</Text>
+          </View>
+
+          <View style={styles.detailRow}>
+            <Text style={styles.detailLabel}>Timing Point:</Text>
             <Text style={styles.detailValue}>
-              {destination.location || "Unknown Location"}
+              {stop.timing_point ? "Yes" : "No"}
             </Text>
           </View>
 
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>💰 Price:</Text>
-            <Text style={styles.detailValue}>${destination.price || "99"}</Text>
-          </View>
-
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>⏱️ Duration:</Text>
-            <Text style={styles.detailValue}>
-              {destination.duration || "1-3 days"}
-            </Text>
-          </View>
-
-          <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>🏷️ Category:</Text>
-            <Text style={styles.detailValue}>
-              {destination.category || "Travel"}
-            </Text>
-          </View>
+          {stop.latitude && stop.longitude && (
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Coordinates:</Text>
+              <Text style={styles.detailValue}>
+                {stop.latitude.toFixed(4)}, {stop.longitude.toFixed(4)}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Action Buttons */}
@@ -172,10 +179,6 @@ const DetailsScreen = () => {
             >
               {isFavourite ? "Remove from Favourites" : "Add to Favourites"}
             </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.actionButton, styles.bookButton]}>
-            <Text style={styles.bookButtonText}>Book Now</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -212,15 +215,12 @@ const createStyles = (colors) =>
       color: colors.surface,
       fontWeight: "600",
     },
-    imageContainer: {
+    header: {
+      height: 200,
+      backgroundColor: colors.primary,
       position: "relative",
-      height: 300,
     },
-    headerImage: {
-      width: "100%",
-      height: "100%",
-    },
-    overlay: {
+    headerOverlay: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: "rgba(0,0,0,0.3)",
     },
@@ -244,48 +244,24 @@ const createStyles = (colors) =>
       padding: 20,
     },
     titleSection: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      marginBottom: 12,
+      marginBottom: 16,
     },
     title: {
-      flex: 1,
       fontSize: 28,
       fontWeight: "bold",
       color: colors.text,
-      marginRight: 16,
-    },
-    ratingContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: colors.surface,
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      borderRadius: 15,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-      elevation: 2,
-    },
-    rating: {
-      marginLeft: 4,
-      fontSize: 14,
-      fontWeight: "600",
-      color: colors.text,
+      marginBottom: 8,
     },
     locationContainer: {
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: 24,
     },
     location: {
       marginLeft: 8,
       fontSize: 16,
       color: colors.textSecondary,
     },
-    descriptionSection: {
+    timetableSection: {
       marginBottom: 24,
     },
     sectionTitle: {
@@ -294,10 +270,60 @@ const createStyles = (colors) =>
       color: colors.text,
       marginBottom: 12,
     },
-    description: {
+    loadingText: {
       fontSize: 16,
       color: colors.textSecondary,
-      lineHeight: 24,
+      textAlign: "center",
+      paddingVertical: 20,
+    },
+    noDeparturesText: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      textAlign: "center",
+      paddingVertical: 20,
+    },
+    departureItem: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 16,
+      marginBottom: 8,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      elevation: 2,
+    },
+    departureHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 8,
+    },
+    busIcon: {
+      backgroundColor: colors.primary,
+      borderRadius: 20,
+      padding: 8,
+      marginRight: 12,
+    },
+    departureInfo: {
+      flex: 1,
+    },
+    lineText: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: colors.text,
+    },
+    directionText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+    },
+    timeText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.primary,
+    },
+    operatorText: {
+      fontSize: 14,
+      color: colors.textSecondary,
     },
     detailsSection: {
       marginBottom: 32,
@@ -342,14 +368,6 @@ const createStyles = (colors) =>
       color: colors.primary,
     },
     favouriteButtonText: {
-      color: colors.surface,
-    },
-    bookButton: {
-      backgroundColor: colors.primary,
-    },
-    bookButtonText: {
-      fontSize: 16,
-      fontWeight: "600",
       color: colors.surface,
     },
   });
