@@ -2,9 +2,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import { Heart, Home, Settings } from "react-native-feather";
-import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "../contexts/ThemeContext";
 import { checkAuthStatus } from "../redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 
 // Import screens
 import DetailsScreen from "../screens/DetailsScreen";
@@ -13,9 +13,15 @@ import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import SettingsScreen from "../screens/SettingsScreen";
+import {
+  AuthStackParamList,
+  MainTabParamList,
+  RootStackParamList,
+} from "../types/navigation";
 
-const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const RootStack = createStackNavigator<RootStackParamList>();
+const AuthStackNavigator = createStackNavigator<AuthStackParamList>();
+const Tab = createBottomTabNavigator<MainTabParamList>();
 
 // Main Tab Navigator (for authenticated users)
 const MainTabs = () => {
@@ -75,41 +81,41 @@ const MainTabs = () => {
 // Auth Stack (for non-authenticated users)
 const AuthStack = () => {
   return (
-    <Stack.Navigator
+    <AuthStackNavigator.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-    </Stack.Navigator>
+      <AuthStackNavigator.Screen name="Login" component={LoginScreen} />
+      <AuthStackNavigator.Screen name="Register" component={RegisterScreen} />
+    </AuthStackNavigator.Navigator>
   );
 };
 
 // Main Stack (includes tabs and detail screens)
 const MainStack = () => {
   return (
-    <Stack.Navigator
+    <RootStack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="MainTabs" component={MainTabs} />
-      <Stack.Screen
+      <RootStack.Screen name="MainTabs" component={MainTabs} />
+      <RootStack.Screen
         name="Details"
         component={DetailsScreen}
         options={{
           presentation: "card",
         }}
       />
-    </Stack.Navigator>
+    </RootStack.Navigator>
   );
 };
 
 // Root Navigator
 const AppNavigator = () => {
-  const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(checkAuthStatus());

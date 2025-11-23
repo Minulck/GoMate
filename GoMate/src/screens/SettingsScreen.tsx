@@ -1,3 +1,4 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
@@ -10,14 +11,20 @@ import {
   View,
 } from "react-native";
 import { Info, LogOut, Moon, Sun } from "react-native-feather";
-import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "../contexts/ThemeContext";
 import { logout } from "../redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { MainTabParamList } from "../types/navigation";
+
+type SettingsScreenNavigationProp = BottomTabNavigationProp<
+  MainTabParamList,
+  "Settings"
+>;
 
 const SettingsScreen = () => {
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const { user } = useSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<SettingsScreenNavigationProp>();
+  const { user } = useAppSelector((state) => state.auth);
   const { isDarkMode, toggleTheme, colors } = useTheme();
 
   const handleLogout = () => {

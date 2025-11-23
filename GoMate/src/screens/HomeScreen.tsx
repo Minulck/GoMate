@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -11,10 +12,9 @@ import {
   View,
 } from "react-native";
 import { Heart, MapPin, Moon, Search, Sun } from "react-native-feather";
-import { useDispatch, useSelector } from "react-redux";
 import { SkeletonList } from "../components/LoadingSkeleton";
 import { Toast } from "../components/Toast";
-import { useTheme } from "../contexts/ThemeContext";
+import { lightTheme, useTheme } from "../contexts/ThemeContext";
 import {
   fetchBusStops,
   fetchStopTimetable,
@@ -25,23 +25,35 @@ import {
   loadFavourites,
   removeFromFavourites,
 } from "../redux/slices/favouritesSlice";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { BusStop } from "../types";
+import { RootStackParamList } from "../types/navigation";
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "Details"
+>;
 
 const HomeScreen = () => {
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const { colors, toggleTheme, isDarkMode } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [toast, setToast] = useState({
+  const [toast, setToast] = useState<{
+    visible: boolean;
+    message: string;
+    type: "success" | "error" | "info";
+  }>({
     visible: false,
     message: "",
     type: "success",
   });
 
-  const { stops, loading, error } = useSelector((state) => state.bus);
-  const { favourites } = useSelector((state) => state.favourites);
-  const { user } = useSelector((state) => state.auth);
+  const { stops, loading, error } = useAppSelector((state) => state.bus);
+  const { favourites } = useAppSelector((state) => state.favourites);
+  const { user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchBusStops());
@@ -72,7 +84,10 @@ const HomeScreen = () => {
     }
   };
 
-  const showToast = (message, type = "success") => {
+  const showToast = (
+    message: string,
+    type: "success" | "error" | "info" = "success"
+  ) => {
     setToast({ visible: true, message, type });
   };
 
@@ -80,7 +95,7 @@ const HomeScreen = () => {
     setToast({ ...toast, visible: false });
   };
 
-  const handleFavouriteToggle = (stop) => {
+  const handleFavouriteToggle = (stop: BusStop) => {
     const isFavourite = favourites.some(
       (fav) => fav.atcocode === stop.atcocode
     );
@@ -93,7 +108,7 @@ const HomeScreen = () => {
     }
   };
 
-  const renderBusStop = ({ item }) => {
+  const renderBusStop = ({ item }: { item: BusStop }) => {
     const isFavourite = favourites.some(
       (fav) => fav.atcocode === item.atcocode
     );
@@ -269,7 +284,7 @@ const HomeScreen = () => {
   );
 };
 
-const createStyles = (colors: any) =>
+const createStyles = (colors: typeof lightTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,

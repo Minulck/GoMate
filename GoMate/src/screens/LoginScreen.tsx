@@ -1,3 +1,4 @@
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -11,18 +12,31 @@ import {
   View,
 } from "react-native";
 import { Map } from "react-native-feather";
-import { useDispatch, useSelector } from "react-redux";
 import { COLORS, SIZES } from "../constants/theme";
 import { clearError, loginAsync } from "../redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { AuthStackParamList } from "../types/navigation";
 import { loginSchema } from "../utils/validation";
 
-const LoginScreen = ({ navigation }) => {
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  "Login"
+>;
+
+const LoginScreen = ({
+  navigation,
+}: {
+  navigation: LoginScreenNavigationProp;
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<{
+    username?: string;
+    password?: string;
+  }>({});
 
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (error) {
@@ -36,10 +50,11 @@ const LoginScreen = ({ navigation }) => {
       await loginSchema.validate({ username, password }, { abortEarly: false });
       setErrors({});
       return true;
-    } catch (err) {
-      const validationErrors = {};
-      err.inner.forEach((error) => {
-        validationErrors[error.path] = error.message;
+    } catch (err: any) {
+      const validationErrors: { username?: string; password?: string } = {};
+      err.inner.forEach((error: any) => {
+        validationErrors[error.path as keyof typeof validationErrors] =
+          error.message;
       });
       setErrors(validationErrors);
       return false;

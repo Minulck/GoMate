@@ -1,3 +1,4 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
@@ -9,22 +10,29 @@ import {
   View,
 } from "react-native";
 import { MapPin, Trash2 } from "react-native-feather";
-import { useDispatch, useSelector } from "react-redux";
-import { useTheme } from "../contexts/ThemeContext";
+import { lightTheme, useTheme } from "../contexts/ThemeContext";
 import {
   removeFromFavourites,
   setFavourites,
 } from "../redux/slices/favouritesSlice";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { BusStop } from "../types";
+import { MainTabParamList } from "../types/navigation";
+
+type FavouritesScreenNavigationProp = BottomTabNavigationProp<
+  MainTabParamList,
+  "Favourites"
+>;
 
 const FavouritesScreen = () => {
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<FavouritesScreenNavigationProp>();
   const { colors, isDarkMode } = useTheme();
-  const { favourites } = useSelector((state) => state.favourites);
+  const { favourites } = useAppSelector((state) => state.favourites);
 
   const styles = createStyles(colors);
 
-  const handleRemoveFavourite = (id) => {
+  const handleRemoveFavourite = (id: string) => {
     Alert.alert(
       "Remove Favourite",
       "Are you sure you want to remove this destination from your favourites?",
@@ -48,11 +56,13 @@ const FavouritesScreen = () => {
     );
   };
 
-  const renderFavourite = ({ item }) => {
+  const renderFavourite = ({ item }: { item: BusStop }) => {
     return (
       <TouchableOpacity
         style={styles.favouriteCard}
-        onPress={() => navigation.navigate("Details", { stop: item })}
+        onPress={() =>
+          navigation.getParent()?.navigate("Details", { stop: item })
+        }
       >
         <View style={styles.busStopIcon}>
           <MapPin width={40} height={40} stroke={colors.primary} />
@@ -138,7 +148,7 @@ const FavouritesScreen = () => {
   );
 };
 
-const createStyles = (colors) =>
+const createStyles = (colors: typeof lightTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,

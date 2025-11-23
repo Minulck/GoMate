@@ -1,5 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
 import {
   FlatList,
@@ -11,24 +12,32 @@ import {
   View,
 } from "react-native";
 import { ArrowLeft, Heart, MapPin } from "react-native-feather";
-import { useDispatch, useSelector } from "react-redux";
-import { useTheme } from "../contexts/ThemeContext";
+import { lightTheme, useTheme } from "../contexts/ThemeContext";
 import {
   addToFavourites,
   removeFromFavourites,
 } from "../redux/slices/favouritesSlice";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { Departure } from "../types";
+import { RootStackParamList } from "../types/navigation";
+
+type DetailsScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "Details"
+>;
+type DetailsScreenRouteProp = RouteProp<RootStackParamList, "Details">;
 
 const DetailsScreen = () => {
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const route = useRoute();
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<DetailsScreenNavigationProp>();
+  const route = useRoute<DetailsScreenRouteProp>();
   const { colors } = useTheme();
-  const { stop } = route.params || {};
+  const { stop } = route.params;
 
   const styles = createStyles(colors);
 
-  const { favourites } = useSelector((state) => state.favourites);
-  const { timetable, loading } = useSelector((state) => state.bus);
+  const { favourites } = useAppSelector((state) => state.favourites);
+  const { timetable, loading } = useAppSelector((state) => state.bus);
   const isFavourite = favourites.some((fav) => fav.atcocode === stop?.atcocode);
 
   const handleFavouriteToggle = () => {
@@ -45,7 +54,7 @@ const DetailsScreen = () => {
     navigation.goBack();
   };
 
-  const renderDeparture = ({ item }) => (
+  const renderDeparture = ({ item }: { item: Departure }) => (
     <View style={styles.departureItem}>
       <View style={styles.departureHeader}>
         <View style={styles.busIcon}>
@@ -193,7 +202,7 @@ const DetailsScreen = () => {
   );
 };
 
-const createStyles = (colors) =>
+const createStyles = (colors: typeof lightTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
