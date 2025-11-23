@@ -1,17 +1,30 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { BusStop } from "../../types";
 
 const FAVOURITES_KEY = "favourites";
+
+export const loadFavourites = createAsyncThunk(
+  "favourites/loadFavourites",
+  async () => {
+    const stored = await AsyncStorage.getItem(FAVOURITES_KEY);
+    if (stored) {
+      return JSON.parse(stored) as BusStop[];
+    }
+    return [] as BusStop[];
+  }
+);
 
 const favouritesSlice = createSlice({
   name: "favourites",
   initialState: {
     favourites: [] as BusStop[],
+    loading: false,
   },
   reducers: {
     setFavourites: (state, action: PayloadAction<BusStop[]>) => {
       state.favourites = action.payload;
+      AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
     },
     addToFavourites: (state, action: PayloadAction<BusStop>) => {
       const exists = state.favourites.find(
@@ -41,14 +54,19 @@ const favouritesSlice = createSlice({
       }
       AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
     },
-    loadFavourites: (state) => {
-      AsyncStorage.getItem(FAVOURITES_KEY).then((stored) => {
-        if (stored) {
-          const favourites = JSON.parse(stored);
-          state.favourites = favourites;
-        }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadFavourites.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loadFavourites.fulfilled, (state, action) => {
+        state.loading = false;
+        state.favourites = action.payload;
+      })
+      .addCase(loadFavourites.rejected, (state) => {
+        state.loading = false;
       });
-    },
   },
 });
 
@@ -57,6 +75,5 @@ export const {
   addToFavourites,
   removeFromFavourites,
   toggleFavourite,
-  loadFavourites,
 } = favouritesSlice.actions;
 export default favouritesSlice.reducer;

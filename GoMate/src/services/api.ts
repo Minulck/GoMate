@@ -292,7 +292,33 @@ class ApiService {
 
       if (!response.ok) {
         if (response.status === 403) {
-          throw new Error("API usage limits exceeded. Using demo data.");
+          console.warn("API usage limits exceeded. Using demo data.");
+          return [
+            {
+              atcocode: "490000123A",
+              name: "Oxford Street",
+              locality: "London",
+              timing_point: true,
+              latitude: 51.515,
+              longitude: -0.144,
+            },
+            {
+              atcocode: "490000248G",
+              name: "Victoria Station",
+              locality: "London",
+              timing_point: true,
+              latitude: 51.49653,
+              longitude: -0.1435,
+            },
+            {
+              atcocode: "490000129D",
+              name: "Kings Cross",
+              locality: "London",
+              timing_point: true,
+              latitude: 51.5304,
+              longitude: -0.12308,
+            },
+          ];
         }
         throw new Error(`Failed to fetch bus stops: ${response.statusText}`);
       }
@@ -347,7 +373,33 @@ class ApiService {
 
       if (!response.ok) {
         if (response.status === 403) {
-          throw new Error("API usage limits exceeded. Using demo data.");
+          console.warn("API usage limits exceeded. Using demo data.");
+          return [
+            {
+              atcocode: "490000123A",
+              name: `${query} Street`,
+              locality: "London",
+              timing_point: true,
+              latitude: 51.515,
+              longitude: -0.144,
+            },
+            {
+              atcocode: "490000248G",
+              name: `${query} Station`,
+              locality: "London",
+              timing_point: true,
+              latitude: 51.49653,
+              longitude: -0.1435,
+            },
+            {
+              atcocode: "490000129D",
+              name: `${query} Square`,
+              locality: "London",
+              timing_point: true,
+              latitude: 51.5304,
+              longitude: -0.12308,
+            },
+          ];
         }
         throw new Error(`Failed to search bus stops: ${response.statusText}`);
       }

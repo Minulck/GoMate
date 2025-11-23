@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import React, { useEffect } from "react";
+import { Heart, Home, Settings } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
-import { Home, Heart, Settings } from "react-native-feather";
-import { checkAuthStatus } from "../redux/slices/authSlice";
 import { useTheme } from "../contexts/ThemeContext";
+import { checkAuthStatus } from "../redux/slices/authSlice";
 
 // Import screens
-import LoginScreen from "../screens/LoginScreen";
-import RegisterScreen from "../screens/RegisterScreen";
-import HomeScreen from "../screens/HomeScreen";
 import DetailsScreen from "../screens/DetailsScreen";
 import FavouritesScreen from "../screens/FavouritesScreen";
+import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
 const Stack = createStackNavigator();

@@ -1,17 +1,18 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Switch,
+  Image,
   ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { User, Moon, Sun, Info, LogOut } from "react-native-feather";
+import { Info, LogOut, Moon, Sun, User } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/slices/authSlice";
 import { useTheme } from "../contexts/ThemeContext";
-import { useNavigation } from "@react-navigation/native";
+import { logout } from "../redux/slices/authSlice";
 
 const SettingsScreen = () => {
   const dispatch = useDispatch();
@@ -30,14 +31,13 @@ const SettingsScreen = () => {
       {/* Header */}
       <View style={[styles.header, { backgroundColor: colors.primary }]}>
         <View style={styles.headerContent}>
-          <View
-            style={[
-              styles.avatarLarge,
-              { backgroundColor: "rgba(255,255,255,0.2)" },
-            ]}
-          >
-            <User width={40} height={40} stroke={colors.surface} />
-          </View>
+        <View style={styles.avatarLarge}>
+          <Image
+            source={{ uri: 'https://png.pngtree.com/png-vector/20250813/ourmid/pngtree-confident-boy-minimalistic-profile-picture-white-background-png-image_17118035.webp' }}
+            style={{ width: 100, height: 100, borderRadius: 50 }}
+            resizeMode="cover"
+          />
+        </View>
           <Text style={[styles.userName, { color: colors.surface }]}>
             {user?.firstName} {user?.lastName}
           </Text>

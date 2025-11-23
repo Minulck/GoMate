@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
+  Image,
   RefreshControl,
   StyleSheet,
   Text,
