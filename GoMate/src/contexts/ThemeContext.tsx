@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { AsyncStorageWrapper } from "../utils/asyncStorage";
 
 const THEME_KEY = "app_theme";

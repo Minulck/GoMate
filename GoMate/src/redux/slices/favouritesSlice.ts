@@ -1,7 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageWrapper } from "../../utils/asyncStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { BusStop } from "../../types";
+import { AsyncStorageWrapper } from "../../utils/asyncStorage";
 
 const FAVOURITES_KEY = "favourites";
 
@@ -25,7 +24,10 @@ const favouritesSlice = createSlice({
   reducers: {
     setFavourites: (state, action: PayloadAction<BusStop[]>) => {
       state.favourites = action.payload;
-      AsyncStorageWrapper.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
+      AsyncStorageWrapper.setItem(
+        FAVOURITES_KEY,
+        JSON.stringify(state.favourites)
+      );
     },
     addToFavourites: (state, action: PayloadAction<BusStop>) => {
       const exists = state.favourites.find(
@@ -33,14 +35,20 @@ const favouritesSlice = createSlice({
       );
       if (!exists) {
         state.favourites.push(action.payload);
-        AsyncStorageWrapper.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
+        AsyncStorageWrapper.setItem(
+          FAVOURITES_KEY,
+          JSON.stringify(state.favourites)
+        );
       }
     },
     removeFromFavourites: (state, action: PayloadAction<string>) => {
       state.favourites = state.favourites.filter(
         (item) => item.atcocode !== action.payload
       );
-      AsyncStorageWrapper.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
+      AsyncStorageWrapper.setItem(
+        FAVOURITES_KEY,
+        JSON.stringify(state.favourites)
+      );
     },
     toggleFavourite: (state, action: PayloadAction<BusStop>) => {
       const exists = state.favourites.find(
@@ -53,7 +61,10 @@ const favouritesSlice = createSlice({
       } else {
         state.favourites.push(action.payload);
       }
-      AsyncStorageWrapper.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
+      AsyncStorageWrapper.setItem(
+        FAVOURITES_KEY,
+        JSON.stringify(state.favourites)
+      );
     },
   },
   extraReducers: (builder) => {

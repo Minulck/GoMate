@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageWrapper } from "../../utils/asyncStorage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiService from "../../services/api";
 import { LoginCredentials, User } from "../../types";
+import { AsyncStorageWrapper } from "../../utils/asyncStorage";
 
 // Async thunk for login
 export const loginAsync = createAsyncThunk(
