@@ -11,14 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  Clock,
-  Heart,
-  LogOut,
-  MapPin,
-  Search,
-  User,
-} from "react-native-feather";
+import { Clock, Heart, LogOut, MapPin, Search } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { SkeletonList } from "../components/LoadingSkeleton";
 import { Toast } from "../components/Toast";
@@ -201,8 +194,13 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <View style={styles.userSection}>
-            <View style={styles.avatarContainer}>
-              <User width={24} height={24} stroke={colors.surface} />
+            <View>
+              <Image
+                source={{
+                  uri: "https://png.pngtree.com/png-vector/20250813/ourmid/pngtree-confident-boy-minimalistic-profile-picture-white-background-png-image_17118035.webp",
+                }}
+                style={styles.avatarImage}
+              />
             </View>
             <View style={styles.welcomeSection}>
               <Text style={styles.welcomeText}>Welcome back,</Text>
@@ -326,13 +324,18 @@ const createStyles = (colors: any) =>
       flex: 1,
     },
     avatarContainer: {
-      width: 48,
-      height: 48,
-      borderRadius: 24,
+      width: 64,
+      height: 64,
+      borderRadius: 32,
       backgroundColor: colors.border,
       justifyContent: "center",
       alignItems: "center",
       marginRight: 12,
+    },
+    avatarImage: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
     },
     welcomeSection: {
       flex: 1,

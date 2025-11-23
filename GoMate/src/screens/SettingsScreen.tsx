@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Info, LogOut, Moon, Sun, User } from "react-native-feather";
+import { Info, LogOut, Moon, Sun } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "../contexts/ThemeContext";
 import { logout } from "../redux/slices/authSlice";
@@ -31,13 +31,15 @@ const SettingsScreen = () => {
       {/* Header */}
       <View style={[styles.header, { backgroundColor: colors.primary }]}>
         <View style={styles.headerContent}>
-        <View style={styles.avatarLarge}>
-          <Image
-            source={{ uri: 'https://png.pngtree.com/png-vector/20250813/ourmid/pngtree-confident-boy-minimalistic-profile-picture-white-background-png-image_17118035.webp' }}
-            style={{ width: 100, height: 100, borderRadius: 50 }}
-            resizeMode="cover"
-          />
-        </View>
+          <View style={styles.avatarLarge}>
+            <Image
+              source={{
+                uri: "https://png.pngtree.com/png-vector/20250813/ourmid/pngtree-confident-boy-minimalistic-profile-picture-white-background-png-image_17118035.webp",
+              }}
+              style={{ width: 100, height: 100, borderRadius: 50 }}
+              resizeMode="cover"
+            />
+          </View>
           <Text style={[styles.userName, { color: colors.surface }]}>
             {user?.firstName} {user?.lastName}
           </Text>
