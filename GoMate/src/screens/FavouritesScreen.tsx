@@ -1,22 +1,20 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Image,
   Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { MapPin, Trash2 } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
-import { MapPin, Star, Trash2 } from "react-native-feather";
+import { useTheme } from "../contexts/ThemeContext";
 import {
   removeFromFavourites,
   setFavourites,
 } from "../redux/slices/favouritesSlice";
-import { COLORS } from "../constants/theme";
-import { useNavigation } from "@react-navigation/native";
-import { useTheme } from "../contexts/ThemeContext";
 
 const FavouritesScreen = () => {
   const dispatch = useDispatch();
@@ -54,42 +52,33 @@ const FavouritesScreen = () => {
     return (
       <TouchableOpacity
         style={styles.favouriteCard}
-        onPress={() => navigation.navigate("Details", { destination: item })}
+        onPress={() => navigation.navigate("Details", { stop: item })}
       >
-        <Image
-          source={{ uri: item.image || "https://via.placeholder.com/300x200" }}
-          style={styles.favouriteImage}
-        />
+        <View style={styles.busStopIcon}>
+          <MapPin width={40} height={40} stroke={colors.primary} />
+        </View>
         <View style={styles.favouriteInfo}>
           <View style={styles.favouriteHeader}>
             <Text style={styles.favouriteTitle} numberOfLines={1}>
-              {item.title}
+              {item.name}
             </Text>
             <TouchableOpacity
               style={styles.removeButton}
-              onPress={() => handleRemoveFavourite(item.id)}
+              onPress={() => handleRemoveFavourite(item.atcocode)}
             >
               <Trash2 width={18} height={18} stroke={colors.error} />
             </TouchableOpacity>
           </View>
           <Text style={styles.favouriteDescription} numberOfLines={2}>
-            {item.description}
+            Bus stop in {item.locality}
           </Text>
           <View style={styles.favouriteFooter}>
             <View style={styles.locationContainer}>
               <MapPin width={12} height={12} stroke={colors.textSecondary} />
-              <Text style={styles.locationText}>
-                {item.location || "Unknown"}
-              </Text>
+              <Text style={styles.locationText}>{item.locality}</Text>
             </View>
             <View style={styles.ratingContainer}>
-              <Star
-                width={12}
-                height={12}
-                stroke={colors.warning}
-                fill={colors.warning}
-              />
-              <Text style={styles.ratingText}>{item.rating || "4.5"}</Text>
+              <Text style={styles.ratingText}>{item.atcocode}</Text>
             </View>
           </View>
         </View>
@@ -102,13 +91,13 @@ const FavouritesScreen = () => {
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyTitle}>No Favourites Yet</Text>
         <Text style={styles.emptySubtitle}>
-          Start exploring destinations and add them to your favourites!
+          Start exploring bus stops and add them to your favourites!
         </Text>
         <TouchableOpacity
           style={styles.exploreButton}
           onPress={() => navigation.navigate("Home")}
         >
-          <Text style={styles.exploreButtonText}>Explore Destinations</Text>
+          <Text style={styles.exploreButtonText}>Explore Bus Stops</Text>
         </TouchableOpacity>
       </View>
     );
@@ -131,7 +120,7 @@ const FavouritesScreen = () => {
         <View style={styles.countContainer}>
           <Text style={styles.countText}>
             {favourites.length}{" "}
-            {favourites.length === 1 ? "destination" : "destinations"} saved
+            {favourites.length === 1 ? "bus stop" : "bus stops"} saved
           </Text>
         </View>
       )}
@@ -140,7 +129,7 @@ const FavouritesScreen = () => {
       <FlatList
         data={favourites}
         renderItem={renderFavourite}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.atcocode}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={renderEmptyState}
@@ -205,12 +194,13 @@ const createStyles = (colors) =>
       shadowOpacity: 0.1,
       shadowRadius: 2,
       elevation: 2,
+      padding: 16,
     },
-    favouriteImage: {
-      width: 100,
-      height: 100,
-      borderTopLeftRadius: 12,
-      borderBottomLeftRadius: 12,
+    busStopIcon: {
+      backgroundColor: colors.primary,
+      borderRadius: 20,
+      padding: 8,
+      marginRight: 12,
     },
     favouriteInfo: {
       flex: 1,

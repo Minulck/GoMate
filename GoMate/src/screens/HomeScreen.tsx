@@ -30,6 +30,7 @@ import {
 } from "../redux/slices/busSlice";
 import {
   addToFavourites,
+  loadFavourites,
   removeFromFavourites,
 } from "../redux/slices/favouritesSlice";
 
@@ -52,6 +53,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     dispatch(fetchBusStops());
+    dispatch(loadFavourites());
   }, [dispatch]);
 
   const onRefresh = async () => {
