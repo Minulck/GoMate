@@ -252,9 +252,7 @@ class ApiService {
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to fetch bus stops: ${response.statusText}`
-        );
+        throw new Error(`Failed to fetch bus stops: ${response.statusText}`);
       }
 
       const data = await response.json();
