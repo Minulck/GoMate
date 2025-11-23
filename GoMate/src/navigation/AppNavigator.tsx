@@ -115,7 +115,11 @@ const AppNavigator = () => {
     dispatch(checkAuthStatus());
   }, []);
 
-  return isAuthenticated ? <MainStack /> : <AuthStack />;
+  return isAuthenticated ? (
+    <MainStack key="authenticated" />
+  ) : (
+    <AuthStack key="unauthenticated" />
+  );
 };
 
 export default AppNavigator;

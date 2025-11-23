@@ -25,8 +25,8 @@ const DUMMYJSON_BASE_URL = "https://dummyjson.com";
 
 // TODO: Replace with your actual TransportAPI credentials
 // Get them from https://developer.transportapi.com/
-const APP_ID = "d3f7ee26";
-const APP_KEY = "c3772544958beef9e83f80a46146f3e0";
+const APP_ID = "1ce2c561";
+const APP_KEY = "332ee40f2e4460d929203a0b569b3654";
 
 export interface BusStop {
   atcocode: string;

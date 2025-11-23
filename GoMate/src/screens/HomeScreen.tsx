@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   FlatList,
   Image,
   RefreshControl,
@@ -11,12 +10,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Clock, Heart, LogOut, MapPin, Search } from "react-native-feather";
+import { Clock, Heart, MapPin, Moon, Search, Sun } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { SkeletonList } from "../components/LoadingSkeleton";
 import { Toast } from "../components/Toast";
 import { useTheme } from "../contexts/ThemeContext";
-import { logout } from "../redux/slices/authSlice";
 import {
   fetchBusStops,
   fetchStopTimetable,
@@ -31,7 +29,7 @@ import {
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { colors } = useTheme();
+  const { colors, toggleTheme, isDarkMode } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -93,24 +91,6 @@ const HomeScreen = () => {
       dispatch(addToFavourites(stop));
       showToast("Added to favourites! ❤️", "success");
     }
-  };
-
-  const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Logout",
-          onPress: () => {
-            dispatch(logout());
-          },
-          style: "destructive",
-        },
-      ],
-      { cancelable: true }
-    );
   };
 
   const renderBusStop = ({ item }) => {
@@ -210,12 +190,16 @@ const HomeScreen = () => {
             </View>
           </View>
           <TouchableOpacity
-            style={styles.logoutButton}
-            onPress={handleLogout}
+            style={styles.themeButton}
+            onPress={toggleTheme}
             activeOpacity={0.7}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <LogOut width={20} height={20} stroke={colors.surface} />
+            {isDarkMode ? (
+              <Sun width={20} height={20} stroke={colors.primary} />
+            ) : (
+              <Moon width={20} height={20} stroke={colors.primary} />
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -352,11 +336,11 @@ const createStyles = (colors: any) =>
       color: colors.surface,
       marginTop: 2,
     },
-    logoutButton: {
+    themeButton: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      backgroundColor: colors.border,
+      backgroundColor: colors.surface,
       justifyContent: "center",
       alignItems: "center",
     },
