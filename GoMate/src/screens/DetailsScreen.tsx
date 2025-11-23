@@ -3,6 +3,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import {
   FlatList,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -83,6 +84,12 @@ const DetailsScreen = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View style={styles.header}>
+        <Image
+          source={{
+            uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn9IJ8TIlyOtFdSo4hbnZWklNU0bRMIQCeZw&s",
+          }}
+          style={styles.headerImage}
+        />
         <View style={styles.headerOverlay} />
 
         {/* Back Button */}
@@ -219,6 +226,12 @@ const createStyles = (colors) =>
       height: 200,
       backgroundColor: colors.primary,
       position: "relative",
+    },
+    headerImage: {
+      width: "100%",
+      height: "100%",
+      position: "absolute",
+      resizeMode: "cover",
     },
     headerOverlay: {
       ...StyleSheet.absoluteFillObject,

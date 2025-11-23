@@ -111,6 +111,16 @@ export interface RootState {
   favourites: FavouritesState;
 }
 
+export interface Destination {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  rating: number;
+  image?: string;
+}
+
 export interface NavigationProps {
   navigation: any;
   route?: any;

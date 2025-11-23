@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Clock, Heart, MapPin, Moon, Search, Sun } from "react-native-feather";
+import { Heart, MapPin, Moon, Search, Sun } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { SkeletonList } from "../components/LoadingSkeleton";
 import { Toast } from "../components/Toast";
@@ -106,11 +106,12 @@ const HomeScreen = () => {
           navigation.navigate("Details", { stop: item });
         }}
       >
-        <View style={styles.destinationImage}>
-          <View style={styles.busStopIcon}>
-            <Clock width={40} height={40} stroke={colors.primary} />
-          </View>
-        </View>
+        <Image
+          source={{
+            uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn9IJ8TIlyOtFdSo4hbnZWklNU0bRMIQCeZw&s",
+          }}
+          style={styles.destinationImage}
+        />
         <View style={styles.destinationInfo}>
           <View style={styles.destinationHeader}>
             <Text style={styles.destinationTitle}>{item.name}</Text>
@@ -407,9 +408,7 @@ const createStyles = (colors: any) =>
     destinationImage: {
       width: "100%",
       height: 220,
-      backgroundColor: colors.border,
-      justifyContent: "center",
-      alignItems: "center",
+      resizeMode: "cover",
     },
     busStopIcon: {
       backgroundColor: colors.surface,

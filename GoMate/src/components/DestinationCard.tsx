@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Heart } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
-import { Destination } from "../types";
-import { toggleFavourite } from "../redux/slices/favouritesSlice";
 import { COLORS, SIZES } from "../constants/theme";
+import { toggleFavourite } from "../redux/slices/favouritesSlice";
 import { RootState } from "../redux/store";
+import { Destination } from "../types";
 
 interface DestinationCardProps {
   destination: Destination;
@@ -28,20 +28,26 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
-      <Image source={{ uri: destination.image }} style={styles.image} />
-      <TouchableOpacity
-        style={styles.favouriteButton}
-        onPress={handleToggleFavourite}
-        activeOpacity={0.7}
-      >
-        <Heart
-          width={20}
-          height={20}
-          stroke={isFavourite ? COLORS.danger : COLORS.textLight}
-          fill={isFavourite ? COLORS.danger : "transparent"}
+      <View>
+        <Image
+          source={{
+            uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn9IJ8TIlyOtFdSo4hbnZWklNU0bRMIQCeZw&s",
+          }}
+          style={styles.image}
         />
-      </TouchableOpacity>
-
+        <TouchableOpacity
+          style={styles.favouriteButton}
+          onPress={handleToggleFavourite}
+          activeOpacity={0.7}
+        >
+          <Heart
+            width={20}
+            height={20}
+            stroke={isFavourite ? COLORS.danger : COLORS.textLight}
+            fill={isFavourite ? COLORS.danger : "transparent"}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={2}>
           {destination.title}
@@ -68,26 +74,6 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
 };
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: COLORS.surface,
-    borderRadius: SIZES.radius,
-    marginBottom: SIZES.padding,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  image: {
-    width: "100%",
-    height: 200,
-    borderTopLeftRadius: SIZES.radius,
-    borderTopRightRadius: SIZES.radius,
-    resizeMode: "cover",
-  },
   favouriteButton: {
     position: "absolute",
     top: 12,
@@ -123,6 +109,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  card: {
+    backgroundColor: COLORS.surface,
+    borderRadius: SIZES.radius,
+    marginBottom: SIZES.padding,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  image: {
+    width: "100%",
+    height: 200,
+    borderTopLeftRadius: SIZES.radius,
+    borderTopRightRadius: SIZES.radius,
+    resizeMode: "cover",
   },
   priceContainer: {
     flex: 1,
