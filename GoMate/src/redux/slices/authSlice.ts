@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageWrapper } from "../../utils/asyncStorage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiService from "../../services/api";
 import { LoginCredentials, User } from "../../types";
@@ -9,8 +10,8 @@ export const loginAsync = createAsyncThunk(
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
       const user = await ApiService.login(credentials);
-      await AsyncStorage.setItem("token", user.token);
-      await AsyncStorage.setItem("user", JSON.stringify(user));
+      await AsyncStorageWrapper.setItem("token", user.token);
+      await AsyncStorageWrapper.setItem("user", JSON.stringify(user));
       return user;
     } catch (error) {
       return rejectWithValue((error as Error).message);
@@ -23,8 +24,8 @@ export const checkAuthStatus = createAsyncThunk(
   "auth/checkStatus",
   async (_, { rejectWithValue }) => {
     try {
-      const token = await AsyncStorage.getItem("token");
-      const userStr = await AsyncStorage.getItem("user");
+      const token = await AsyncStorageWrapper.getItem("token");
+      const userStr = await AsyncStorageWrapper.getItem("user");
 
       if (token && userStr) {
         const user = JSON.parse(userStr);
@@ -56,8 +57,8 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.error = null;
-      AsyncStorage.removeItem("token");
-      AsyncStorage.removeItem("user");
+      AsyncStorageWrapper.removeItem("token");
+      AsyncStorageWrapper.removeItem("user");
     },
   },
   extraReducers: (builder) => {

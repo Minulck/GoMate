@@ -64,9 +64,6 @@ const FavouritesScreen = () => {
           navigation.getParent()?.navigate("Details", { stop: item })
         }
       >
-        <View style={styles.busStopIcon}>
-          <MapPin width={40} height={40} stroke={colors.primary} />
-        </View>
         <View style={styles.favouriteInfo}>
           <View style={styles.favouriteHeader}>
             <Text style={styles.favouriteTitle} numberOfLines={1}>
@@ -206,15 +203,8 @@ const createStyles = (colors: typeof lightTheme) =>
       elevation: 2,
       padding: 16,
     },
-    busStopIcon: {
-      backgroundColor: colors.primary,
-      borderRadius: 20,
-      padding: 8,
-      marginRight: 12,
-    },
     favouriteInfo: {
       flex: 1,
-      padding: 12,
       justifyContent: "space-between",
     },
     favouriteHeader: {

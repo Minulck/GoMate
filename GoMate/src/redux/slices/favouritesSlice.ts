@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageWrapper } from "../../utils/asyncStorage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { BusStop } from "../../types";
 
@@ -7,7 +8,7 @@ const FAVOURITES_KEY = "favourites";
 export const loadFavourites = createAsyncThunk(
   "favourites/loadFavourites",
   async () => {
-    const stored = await AsyncStorage.getItem(FAVOURITES_KEY);
+    const stored = await AsyncStorageWrapper.getItem(FAVOURITES_KEY);
     if (stored) {
       return JSON.parse(stored) as BusStop[];
     }
@@ -24,7 +25,7 @@ const favouritesSlice = createSlice({
   reducers: {
     setFavourites: (state, action: PayloadAction<BusStop[]>) => {
       state.favourites = action.payload;
-      AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
+      AsyncStorageWrapper.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
     },
     addToFavourites: (state, action: PayloadAction<BusStop>) => {
       const exists = state.favourites.find(
@@ -32,14 +33,14 @@ const favouritesSlice = createSlice({
       );
       if (!exists) {
         state.favourites.push(action.payload);
-        AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
+        AsyncStorageWrapper.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
       }
     },
     removeFromFavourites: (state, action: PayloadAction<string>) => {
       state.favourites = state.favourites.filter(
         (item) => item.atcocode !== action.payload
       );
-      AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
+      AsyncStorageWrapper.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
     },
     toggleFavourite: (state, action: PayloadAction<BusStop>) => {
       const exists = state.favourites.find(
@@ -52,7 +53,7 @@ const favouritesSlice = createSlice({
       } else {
         state.favourites.push(action.payload);
       }
-      AsyncStorage.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
+      AsyncStorageWrapper.setItem(FAVOURITES_KEY, JSON.stringify(state.favourites));
     },
   },
   extraReducers: (builder) => {
